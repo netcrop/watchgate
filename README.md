@@ -11,7 +11,7 @@ pwgen
 OpenPGP version 2+  
 
 ```
-# Following Bash functions use sudo
+\# Following Bash functions use sudo
 eva@node: cd src/
 eva@node: source configure.sh
 
