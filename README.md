@@ -1,6 +1,7 @@
 # watchgate
-Time based One Time Password - TOTP written as Bash/SHELL Cron service.
-
+Time based One Time Password - TOTP written as Bash/SHELL Cron service.  
+It can be used to auto generate TOTP within one minute interval for local, remote computers and Virtul machines.  
+the administrator seating behind a single user account can remote login to all other nodes user accounts.
 ## Install, maintain and uninstall
 
 * For linux/unix system:  
