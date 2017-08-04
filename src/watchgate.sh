@@ -38,7 +38,7 @@ ${Watchgate[cronscript]}(){
   declare -a Users=(\$(${Watchgate[cut]} -d':' -f1,3 /etc/passwd|\
     ${Watchgate[egrep]} ":[[:digit:]]{4}|:0"|\
     ${Watchgate[cut]} -d':' -f1|\
-    ${Watchgate[egrep]} -v www))
+    ${Watchgate[egrep]} -v ${Watchgate[excludeuser]}))
   local i user word timestamp
   timestamp=\$(${Watchgate[date]} +"%Y%m%d%H%M")
   for user in \${Users[@]};do
