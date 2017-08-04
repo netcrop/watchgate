@@ -46,9 +46,9 @@ Manage systemd timer service.
   Aug 03 22:33:00 node systemd[1]: Started watchgate.service.
   
   From console prompt at Aug 03 22:33:05 node: 
-  eva > watchgate adam
+  eva@node > watchgate adam
   LeKy3QVU
-  eva > su -l adam
+  eva@node > su -l adam
   Password:
   adam >
 
@@ -58,9 +58,9 @@ Manage systemd timer service.
   Aug 03 22:34:00 node systemd[1]: Started watchgate.service.
   
   From console prompt at Aug 03 22:34:20 node: 
-  eva > watchgate adam
+  eva@node > watchgate adam
   IekIa3w9
-  eva > su -l adam
+  eva@node > su -l adam
   Password:
   adam >
 ```
