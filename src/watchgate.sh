@@ -22,13 +22,13 @@ watchgate()
 watchgate.gen()
 {
   local destfile=/usr/local/bin/watchgate.cron
-  [[ -a $destfile ]] && ${Watchgate[sudo]} ${Watchgate[rm]} -f ${Watchgate[cronscript]}
-  ${Watchgate[cat]}<<-EOF> ${Watchgate[prefix]}${Watchgate[cronscript]}
+  [[ -a $destfile ]] && ${Watchgate[sudo]} ${Watchgate[rm]} -f ${Watchgate[prefix]}${Watchgate[cronscript]}
+  ${Watchgate[sudo]} ${Watchgate[cat]}<<-EOF> ${Watchgate[prefix]}${Watchgate[cronscript]}
 #!${Watchgate[env]} ${Watchgate[bash]}
 ${Watchgate[cronscript]}(){
 #set -o xtrace
   [[ \$(${Watchgate[id]} -u) != 0 ]] && return
-  local seed="${Watchgate[configdir]}/${Watchgate[seedprefix]}"
+  local seed="${Watchgate[configdir]}${Watchgate[seedprefix]}"
   if [[ ! -r \$seed || ! -r \$seed.asc ]];then
     seed=/dev/null
     builtin printf "Seed missing!\n"
