@@ -23,19 +23,18 @@ watchgate.gen()
 {
   local destfile=/usr/local/bin/watchgate.cron
   [[ -a $destfile ]] && ${Watchgate[sudo]} ${Watchgate[rm]} -f ${Watchgate[cronscript]}
-  ${Watchgate[cat]}<<-EOF> ${Watchgate[cronscript]}
-#!\${Watchgate[env]} \${Watchgate[bash]}
-()
-\${Watchgate[cronscript]}{
+  ${Watchgate[cat]}<<-EOF> ${Watchgate[prefix]}${Watchgate[cronscript]}
+#!${Watchgate[env]} ${Watchgate[bash]}
+${Watchgate[cronscript]}(){
 #set -o xtrace
-  [[ \$(\${Watchgate[id]} -u) != 0 ]] && return
-  local seed="\${Watchgate[configdir]}/\${Watchgate[seedprefix]}"
+  [[ \$(${Watchgate[id]} -u) != 0 ]] && return
+  local seed="${Watchgate[configdir]}/${Watchgate[seedprefix]}"
   if [[ ! -r \$seed || ! -r \$seed.asc ]];then
     seed=/dev/null
     builtin printf "Seed missing!\n"
   fi
   local tmpfile=\$(${Watchgate[mktemp]})
-  builtin trap "${Watchgate[shred]} -u \$tmpfile" SIGHUP SIGTERM SIGINT
+  builtin trap "${Watchgate[shred]} -fu \$tmpfile" SIGHUP SIGTERM SIGINT
   declare -a Users=(\$(${Watchgate[cut]} -d':' -f1,3 /etc/passwd|\
     ${Watchgate[egrep]} ":[[:digit:]]{4}|:0"|\
     ${Watchgate[cut]} -d':' -f1|\
@@ -51,7 +50,7 @@ watchgate.gen()
   ${Watchgate[shred]} -fu \$tmpfile
 #set +o xtrace
 }
-\${Watchgate[cronscript]}
+${Watchgate[cronscript]}
 EOF
   ${Watchgate[sudo]} ${Watchgate[chmod]} u=rx,go= $destfile
   ${Watchgate[sudo]} ${Watchgate[chown]} root:users $destfile
@@ -73,7 +72,6 @@ watchgate.install()
 }
 watchgate.uninstall()
 {
-  local hostname=$(${Watchgate[hostname]})
   ${Watchgate[sudo]} ${Watchgate[rm]} -f /usr/lib/systemd/system/watchgate.service
   ${Watchgate[sudo]} ${Watchgate[rm]} -f /usr/lib/systemd/system/watchgate.timer
   ${Watchgate[sudo]} ${Watchgate[rm]} -f /usr/lib/systemd/system/timers.target.wants/watchgate.timer
