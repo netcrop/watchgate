@@ -1,34 +1,45 @@
 watchgate.query()
 {
-watchgate()
+  set -o xtrace
+  [[ -a ${Watchgate[prefix]}${Watchgate[queryscript]} ]] \
+    && ${Watchgate[sudo]} ${Watchgate[rm]} -f ${Watchgate[prefix]}${Watchgate[queryscript]}
+   ${Watchgate[sudo]} ${Watchgate[cat]}<<-EOF> ${Watchgate[prefix]}${Watchgate[queryscript]}
+#!${Watchgate[env]} ${Watchgate[bash]}
+${Watchgate[queryscript]}()
 {
-  local user=${1:?[user]}
-  local seed=${2:-"/etc/watchgate/watchgate_$(${Watchgate[hostname]})"}
-  if [[ -a $seed && -r $seed.asc ]];then
-    local tmpfile=$(mktemp)
-    builtin trap "${Watchgate[shred]} -u $tmpfile" SIGHUP SIGTERM SIGINT
-    ${Watchgate[gpg2]} --homedir $HOME/.gnupg --no-tty --decrypt --no-verbose --quiet $seed.asc >$tmpfile
-    if [[ $? != 0 ]];then
+  local user=\${1:?[user]}
+  local seed=\${2:-"${Watchgate[configdir]}${Watchgate[seedprefix]}"}
+  if [[ -a \$seed && -r \$seed.asc ]];then
+    local tmpfile=\$(mktemp)
+    builtin trap "${Watchgate[shred]} -u \$tmpfile" SIGHUP SIGTERM SIGINT
+    ${Watchgate[gpg2]} --homedir $HOME/.gnupg --no-tty --decrypt --no-verbose --quiet \$seed.asc >\$tmpfile
+    if [[ \$? != 0 ]];then
       builtin printf "Try using same gpg-agent to login all account.\n"
       return
     fi
     ${Watchgate[pwgen]} --capitalize --numerals --num-passwords=1 \
-      --secure --sha1=$tmpfile#"$user$(${Watchgate[date]} +"%Y%m%d%H%M")" 8
-    ${Watchgate[shred]} -u $tmpfile
+      --secure --sha1=\$tmpfile#"\$user\$(${Watchgate[date]} +"%Y%m%d%H%M")" 8
+    ${Watchgate[shred]} -u \$tmpfile
     return
   fi
   builtin printf "Seed missing!\n"
   ${Watchgate[pwgen]} --capitalize --numerals --num-passwords=1 \
-    --secure --sha1=/dev/null#"$user$(${Watchgate[date]} +"%Y%m%d%H%M")" 8
+    --secure --sha1=/dev/null#"\$user\$(${Watchgate[date]} +"%Y%m%d%H%M")" 8
 }
+${Watchgate[queryscript]}
+EOF
+  ${Watchgate[sudo]} ${Watchgate[chmod]} u=rx,go= ${Watchgate[prefix]}${Watchgate[queryscript]}
+  ${Watchgate[sudo]} ${Watchgate[chown]} root:users ${Watchgate[prefix]}${Watchgate[queryscript]}
+  set +o xtrace
 }
-watchgate.gen()
+watchgate.cron()
 {
   [[ -a ${Watchgate[prefix]}${Watchgate[cronscript]} ]] \
     && ${Watchgate[sudo]} ${Watchgate[rm]} -f ${Watchgate[prefix]}${Watchgate[cronscript]}
   ${Watchgate[sudo]} ${Watchgate[cat]}<<-EOF> ${Watchgate[prefix]}${Watchgate[cronscript]}
 #!${Watchgate[env]} ${Watchgate[bash]}
-${Watchgate[cronscript]}(){
+${Watchgate[cronscript]}()
+{
 #set -o xtrace
   [[ \$(${Watchgate[id]} -u) != 0 ]] && return
   local seed="${Watchgate[configdir]}${Watchgate[seedprefix]}"
@@ -61,7 +72,7 @@ EOF
 watchgate.install()
 {
   watchgate.uninstall
-  watchgate.gen
+  watchgate.cron
   ${Watchgate[sudo]} ${Watchgate[mkdir]} -p /usr/local/man/man1/
   ${Watchgate[sudo]} ${Watchgate[cp]} watchgate.1 /usr/local/man/man1/watchgate.1
   ${Watchgate[sudo]} ${Watchgate[chmod]} 0644 /usr/local/man/man1/watchgate.1 
