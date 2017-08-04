@@ -1,3 +1,24 @@
+cmdlist='sed basename cat id cut bash man mktemp egrep date env mv chpasswd pwgen hostname sudo cp chmod ln chown rm sha1sum sha512sum gpg2 shred mkdir systemctl'
+unset Watchgate
+declare -Ax Watchgate
+for cmd in $cmdlist;do
+  i="$(which $cmd)"
+  [[ X$i == X ]] && return
+  Watchgate["$cmd"]="$i"
+done
+Watchgate[prefix]=/usr/local/bin/
+Watchgate[cronscript]=watchgate.cron
+Watchgate[queryscript]=watchgate
+Watchgate[configdir]=/etc/watchgate/
+Watchgate[seedprefix]=watchgate_$(${Watchgate[hostname]})
+Watchgate[mandir]=/usr/local/man/man1/
+Watchgate[excludeuser]=www
+unset cmdlist cmd i
+
+watchgate.mutation()
+{
+  /builtin source <(${Watchgate[cat]}<<-MUT
+
 watchgate.query()
 {
 #  set -o xtrace
@@ -98,37 +119,37 @@ watchgate.uninstall()
 }
 watchgate.seed()
 {
-  local destdir=${1:?[seed dest dir]}
-  local seed="${Watchgate[seedprefix]}_$(${Watchgate[date]} +"%Y%m%d%H%M%S")"
-  local tmpfile=$(${Watchgate[mktemp]})
+  local destdir=\${1:?[seed dest dir]}
+  local seed="${Watchgate[seedprefix]}_\$(${Watchgate[date]} +"%Y%m%d%H%M%S")"
+  local tmpfile=\$(${Watchgate[mktemp]})
   builtin trap "${Watchgate[shred]} -u $tmpfile" SIGHUP SIGTERM SIGINT
-  ${Watchgate[sha512sum]} <<<$RANDOM|${Watchgate[cut]} -d' ' -f1 > $tmpfile
-  ${Watchgate[gpg2]} --symmetric --no-verbose --quiet --output $destdir/$seed.asc --armor $tmpfile
-  ${Watchgate[shred]} -fu $tmpfile
+  ${Watchgate[sha512sum]} <<<\$RANDOM|${Watchgate[cut]} -d' ' -f1 > \$tmpfile
+  ${Watchgate[gpg2]} --symmetric --no-verbose --quiet --output \$destdir/\$seed.asc --armor \$tmpfile
+  ${Watchgate[shred]} -fu \$tmpfile
 }
 watchgate.seed.install()
 {
-  local seedasc=${1:?[watchgate_$hostname_\$date.asc file]}
-  local seed=$(${Watchgate[basename]} ${seedasc%.asc})
-  local destseed=${Watchgate[configdir]}/$seed
-  local tmpfile=$(mktemp)
-  builtin trap "${Watchgate[shred]} -u $tmpfile" SIGHUP SIGTERM SIGINT
-  ${Watchgate[gpg2]} --no-tty --decrypt --no-verbose --quiet $seedasc >$tmpfile
-  if [[ $? != 0 ]];then
-    ${Watchgate[shred]} -fu $tmpfile
+  local seedasc=\${1:?[watchgate_\$hostname_\$date.asc file]}
+  local seed=\$(${Watchgate[basename]} \${seedasc%.asc})
+  local destseed=${Watchgate[configdir]}/\$seed
+  local tmpfile=\$(mktemp)
+  builtin trap "${Watchgate[shred]} -u \$tmpfile" SIGHUP SIGTERM SIGINT
+  ${Watchgate[gpg2]} --no-tty --decrypt --no-verbose --quiet \$seedasc >\$tmpfile
+  if [[ \$? != 0 ]];then
+    ${Watchgate[shred]} -fu \$tmpfile
     return
   fi
   ${Watchgate[sudo]} ${Watchgate[mkdir]} -p ${Watchgate[configdir]}
   ${Watchgate[sudo]} ${Watchgate[chmod]} ug=rx,o= ${Watchgate[configdir]}
   ${Watchgate[sudo]} ${Watchgate[chown]} root:users ${Watchgate[configdir]}
-  [[ -a $destseed ]] && ${Watchgate[sudo]} ${Watchgate[shred]} -fu $destseed
-  [[ -a $destseed.asc ]] && ${Watchgate[sudo]} ${Watchgate[shred]} -fu $destseed.asc
-  ${Watchgate[sudo]} ${Watchgate[cp]} -f $seedasc $destseed.asc 
-  ${Watchgate[sudo]} ${Watchgate[mv]} -f $tmpfile $destseed
-  ${Watchgate[sudo]} ${Watchgate[chmod]} 0440 $destseed.asc
-  ${Watchgate[sudo]} ${Watchgate[chown]} root:users $destseed.asc
-  ${Watchgate[sudo]} ${Watchgate[chmod]} 0400 $destseed
-  ${Watchgate[sudo]} ${Watchgate[chown]} root:root $destseed
+  [[ -a \$destseed ]] && ${Watchgate[sudo]} ${Watchgate[shred]} -fu \$destseed
+  [[ -a \$destseed.asc ]] && ${Watchgate[sudo]} ${Watchgate[shred]} -fu \$destseed.asc
+  ${Watchgate[sudo]} ${Watchgate[cp]} -f \$seedasc \$destseed.asc 
+  ${Watchgate[sudo]} ${Watchgate[mv]} -f \$tmpfile \$destseed
+  ${Watchgate[sudo]} ${Watchgate[chmod]} 0440 \$destseed.asc
+  ${Watchgate[sudo]} ${Watchgate[chown]} root:users \$destseed.asc
+  ${Watchgate[sudo]} ${Watchgate[chmod]} 0400 \$destseed
+  ${Watchgate[sudo]} ${Watchgate[chown]} root:root \$destseed
   ${Watchgate[sudo]} ${Watchgate[ln]} -fs $destseed ${Watchgate[configdir]}${Watchgate[seedprefix]}
   ${Watchgate[sudo]} ${Watchgate[ln]} -fs $destseed.asc ${Watchgate[configdir]}${Watchgate[seedprefix]}.asc
 }
@@ -180,4 +201,9 @@ watchgate.timer()
 {
   ${Watchgate[systemctl]} list-timers --all
 }
-
+MUT
+  )
+}
+watchgate.mutation
+builtin unset -f watchgate.mutation
+builtin unset Watchgate
