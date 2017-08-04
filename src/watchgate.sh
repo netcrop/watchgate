@@ -26,9 +26,9 @@ ${Watchgate[queryscript]}()
   ${Watchgate[pwgen]} --capitalize --numerals --num-passwords=1 \
     --secure --sha1=/dev/null#"\$user\$(${Watchgate[date]} +"%Y%m%d%H%M")" 8
 }
-${Watchgate[queryscript]}
+${Watchgate[queryscript]} "\$@"
 EOF
-  ${Watchgate[sudo]} ${Watchgate[chmod]} u=rx,go= ${Watchgate[prefix]}${Watchgate[queryscript]}
+  ${Watchgate[sudo]} ${Watchgate[chmod]} u=rx,g=rx,o= ${Watchgate[prefix]}${Watchgate[queryscript]}
   ${Watchgate[sudo]} ${Watchgate[chown]} root:users ${Watchgate[prefix]}${Watchgate[queryscript]}
   set +o xtrace
 }
