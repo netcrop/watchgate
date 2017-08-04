@@ -1,0 +1,69 @@
+.TH watchgate 1
+.SH NAME
+watchgate
+.SH SYNOPSIS
+.B watchgate $USER
+.SH DESCRIPTION
+Time based One Time Password - TOTP written as Bash/SHELL Cron service.
+.SH MAINTENANCE FUNCTIONS
+These "current Bash session" functions are only required for maintenance, and are not needed for daily use of Cron service.
+.TP
+.I "${Watchgate[@]}"
+An associative array contains absolute path to executable commands will be exported into current SHELL session.
+.TP
+.I "watchgate.install/uninstall"
+Install/Uninstall the systemd timer service (alt. Cron service), which include $prefix/watchgate.cron (a TOTP Bash script run by Cron service), $prefix/watchgate (password query script, run by login user), watchgate.timer (systemd timer), watchgate.service (systemd service) and watchgate.1 (the Man page).
+.TP
+.I "watchgate.seed"
+Generate a secret "seed" file using sha512sum of a random number, encrypt/sign it with OpenPGP DES 128.
+.TP
+.I "watchgate.seed.install/uninstall"
+Install/Uninstall both the secret seed and encrypted seed.asc into /etc/watchgate/. The secret seed will only be visible for root user (User=root in systemd timer service).
+.TP
+.I "watchgate.enable/start/stop/disable/reload/units"
+Manage systemd timer service.
+.SH SCRIPTS
+.TP
+.I "$prefix/watchgate.cron"
+Generate a TOTP, based on the secret seed, current time stamp and user account name. Also changes a set of chosen accounts (effective user ID greater then 1000 and 0 - root) password with these new generated one.
+.TP
+.I "$prefix/watchgate"
+Decrypt the secret seed.asc file and generate a TOTP based on the same seed, current time stamp and user account name. Also print the generated password to stdout for login purpose. Within the same time period (default one minute) these passwords are identical to what "/usr/local/bin/watchgate" had generated and changed.
+
+
+.SH AUTHORS
+written by Yang Li.
+.SH REPORTING BUGS
+github.com/netcrop/watchgate
+.SH LIMITATIONS
+A single user account on one machine has to be left out without using TOTP but a static password. A human needs this account for login to other accounts in local or remote machine/VMs. This limitation will be improved in the near future.
+.SH LICENSE
+GNU GENERAL PUBLIC LICENSE Version 2
+
+.SH EXAMPLES
+.VE
+.LP
+
+  From journalctl log file
+  Aug 03 22:33:00 node systemd[1]: Starting watchgate.service...
+  Aug 03 22:33:00 node chpasswd[7311]: pam_unix(chpasswd:chauthtok): password changed for adam
+  Aug 03 22:33:00 node systemd[1]: Started watchgate.service.
+  
+  From console prompt at Aug 03 22:33:05 node: 
+  eve > watchgate adam
+  LeKy3QVU
+  eve > su -l adam
+  Password:
+  adam >
+
+  From journalctl log file
+  Aug 03 22:34:00 node systemd[1]: Starting watchgate.service...
+  Aug 03 22:34:00 node chpasswd[7421]: pam_unix(chpasswd:chauthtok): password changed for adam
+  Aug 03 22:34:00 node systemd[1]: Started watchgate.service.
+  
+  From console prompt at Aug 03 22:34:20 node: 
+  eve > watchgate adam
+  IekIa3w9
+  eve > su -l adam
+  Password:
+  adam >

@@ -14,6 +14,12 @@ OpenPGP version 2+
 Following bash functions use sudo
 > cd src/
 > source configure.sh
+
+Install/Uninstall the systemd timer service (alt. Cron service),
+which include $prefix/watchgate.cron (a TOTP Bash script run by Cron service),
+$prefix/watchgate (password query script, run by login user),
+watchgate.timer (systemd timer), watchgate.service (systemd service)
+and watchgate.1 (the Man page).
 > watchgate.install
 
 Generate a secret "seed" file using sha512sum of a random number,

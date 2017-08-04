@@ -1,0 +1,10 @@
+[Unit]
+Description=
+ConditionACPower=true
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/watchgate
+Nice=19
+IOSchedulingClass=best-effort
+IOSchedulingPriority=7
