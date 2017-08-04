@@ -1,2 +1,2 @@
 # watchgate
-Time based One Time Password/TOTP Bash/SHELL module.
+Time based One Time Password - TOTP written as Bash/SHELL Cron service.
