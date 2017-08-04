@@ -11,7 +11,7 @@ pwgen
 OpenPGP version 2+  
 
 ```
-Following bash functions use sudo
+Following Bash functions use sudo
 > cd src/
 > source configure.sh
 
@@ -36,7 +36,7 @@ Manage systemd timer service.
 ```
 ## Using watchgate
 ```
-   watchgate $USER
+> watchgate $USER
 ```
 ## Examples
 ```
