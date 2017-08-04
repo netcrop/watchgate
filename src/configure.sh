@@ -1,4 +1,4 @@
-cmdlist='sed basename cat id cut mktemp egrep date env mv chpasswd pwgen hostname sudo cp chmod ln chown rm sha1sum sha512sum gpg2 shred mkdir systemctl'
+cmdlist='sed basename cat id cut bash man mktemp egrep date env mv chpasswd pwgen hostname sudo cp chmod ln chown rm sha1sum sha512sum gpg2 shred mkdir systemctl'
 unset Watchgate
 declare -Ax Watchgate
 for cmd in $cmdlist;do
