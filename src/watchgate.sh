@@ -17,7 +17,7 @@ unset cmdlist cmd i
 
 watchgate.mutation()
 {
-  /builtin source <(${Watchgate[cat]}<<-MUT
+  builtin source <(${Watchgate[cat]}<<-MUT
 
 watchgate.query()
 {
