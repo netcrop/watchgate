@@ -33,13 +33,13 @@ ${Watchgate[queryscript]}()
   if [[ -a \\\$seed && -r \\\$seed.asc ]];then
     local tmpfile=\\\$(mktemp)
     builtin trap "${Watchgate[shred]} -u \\\$tmpfile" SIGHUP SIGTERM SIGINT
-    ${Watchgate[gpg2]} --homedir \\\$HOME/.gnupg --no-tty --decrypt --no-verbose --quiet \\\$seed.asc >\\$tmpfile
+    ${Watchgate[gpg2]} --homedir \\\$HOME/.gnupg --no-tty --decrypt --no-verbose --quiet \\\$seed.asc >\\\$tmpfile
     if [[ \\\$? != 0 ]];then
       builtin printf "Try using same gpg-agent to login all account.\n"
       return
     fi
     ${Watchgate[pwgen]} --capitalize --numerals --num-passwords=1 \
-      --secure --sha1=\\\$tmpfile#"\\$user\\\$(${Watchgate[date]} +"%Y%m%d%H%M")" 8
+      --secure --sha1=\\\$tmpfile#"\\\$user\\\$(${Watchgate[date]} +"%Y%m%d%H%M")" 8
     ${Watchgate[shred]} -u \\\$tmpfile
     return
   fi
