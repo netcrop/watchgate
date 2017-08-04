@@ -1,3 +1,5 @@
+watchgate.query()
+{
 watchgate()
 {
   local user=${1:?[user]}
@@ -19,10 +21,11 @@ watchgate()
   ${Watchgate[pwgen]} --capitalize --numerals --num-passwords=1 \
     --secure --sha1=/dev/null#"$user$(${Watchgate[date]} +"%Y%m%d%H%M")" 8
 }
+}
 watchgate.gen()
 {
-  local destfile=/usr/local/bin/watchgate.cron
-  [[ -a $destfile ]] && ${Watchgate[sudo]} ${Watchgate[rm]} -f ${Watchgate[prefix]}${Watchgate[cronscript]}
+  [[ -a ${Watchgate[prefix]}${Watchgate[cronscript]} ]] \
+    && ${Watchgate[sudo]} ${Watchgate[rm]} -f ${Watchgate[prefix]}${Watchgate[cronscript]}
   ${Watchgate[sudo]} ${Watchgate[cat]}<<-EOF> ${Watchgate[prefix]}${Watchgate[cronscript]}
 #!${Watchgate[env]} ${Watchgate[bash]}
 ${Watchgate[cronscript]}(){
@@ -52,8 +55,8 @@ ${Watchgate[cronscript]}(){
 }
 ${Watchgate[cronscript]}
 EOF
-  ${Watchgate[sudo]} ${Watchgate[chmod]} u=rx,go= $destfile
-  ${Watchgate[sudo]} ${Watchgate[chown]} root:users $destfile
+  ${Watchgate[sudo]} ${Watchgate[chmod]} u=rx,go= ${Watchgate[prefix]}${Watchgate[cronscript]}
+  ${Watchgate[sudo]} ${Watchgate[chown]} root:users ${Watchgate[prefix]}${Watchgate[cronscript]}
 }
 watchgate.install()
 {
