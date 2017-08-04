@@ -28,26 +28,26 @@ watchgate.query()
 #!${Watchgate[env]} ${Watchgate[bash]}
 ${Watchgate[queryscript]}()
 {
-  local user=\${1:?[user]}
-  local seed=\${2:-"${Watchgate[configdir]}${Watchgate[seedprefix]}"}
-  if [[ -a \$seed && -r \$seed.asc ]];then
-    local tmpfile=\$(mktemp)
-    builtin trap "${Watchgate[shred]} -u \$tmpfile" SIGHUP SIGTERM SIGINT
-    ${Watchgate[gpg2]} --homedir \$HOME/.gnupg --no-tty --decrypt --no-verbose --quiet \$seed.asc >\$tmpfile
-    if [[ \$? != 0 ]];then
-      builtin printf "Try using same gpg-agent to login all account.\n"
+  local user=\\${1:?[user]}
+  local seed=\\${2:-"${Watchgate[configdir]}${Watchgate[seedprefix]}"}
+  if [[ -a \\$seed && -r \\$seed.asc ]];then
+    local tmpfile=\\$(mktemp)
+    builtin trap "${Watchgate[shred]} -u \\$tmpfile" SIGHUP SIGTERM SIGINT
+    ${Watchgate[gpg2]} --homedir \\$HOME/.gnupg --no-tty --decrypt --no-verbose --quiet \\$seed.asc >\\$tmpfile
+    if [[ \\$? != 0 ]];then
+      builtin printf "Try using same gpg-agent to login all account.\\n"
       return
     fi
     ${Watchgate[pwgen]} --capitalize --numerals --num-passwords=1 \
-      --secure --sha1=\$tmpfile#"\$user\$(${Watchgate[date]} +"%Y%m%d%H%M")" 8
-    ${Watchgate[shred]} -u \$tmpfile
+      --secure --sha1=\\$tmpfile#"\\$user\\$(${Watchgate[date]} +"%Y%m%d%H%M")" 8
+    ${Watchgate[shred]} -u \\$tmpfile
     return
   fi
-  builtin printf "Seed missing!\n"
+  builtin printf "Seed missing!\\n"
   ${Watchgate[pwgen]} --capitalize --numerals --num-passwords=1 \
-    --secure --sha1=/dev/null#"\$user\$(${Watchgate[date]} +"%Y%m%d%H%M")" 8
+    --secure --sha1=/dev/null#"\\$user\\$(${Watchgate[date]} +"%Y%m%d%H%M")" 8
 }
-${Watchgate[queryscript]} "\$@"
+${Watchgate[queryscript]} "\\$@"
 EOF
   ${Watchgate[sudo]} ${Watchgate[chmod]} u=rx,g=rx,o= ${Watchgate[prefix]}${Watchgate[queryscript]}
   ${Watchgate[sudo]} ${Watchgate[chown]} root:users ${Watchgate[prefix]}${Watchgate[queryscript]}
@@ -62,27 +62,27 @@ watchgate.cron()
 ${Watchgate[cronscript]}()
 {
 #set -o xtrace
-  [[ \$(${Watchgate[id]} -u) != 0 ]] && return
+  [[ \\$(${Watchgate[id]} -u) != 0 ]] && return
   local seed="${Watchgate[configdir]}${Watchgate[seedprefix]}"
-  if [[ ! -r \$seed || ! -r \$seed.asc ]];then
+  if [[ ! -r \\$seed || ! -r \\$seed.asc ]];then
     seed=/dev/null
-    builtin printf "Seed missing!\n"
+    builtin printf "Seed missing!\\n"
   fi
-  local tmpfile=\$(${Watchgate[mktemp]})
-  builtin trap "${Watchgate[shred]} -fu \$tmpfile" SIGHUP SIGTERM SIGINT
-  declare -a Users=(\$(${Watchgate[cut]} -d':' -f1,3 /etc/passwd|\
+  local tmpfile=\\$(${Watchgate[mktemp]})
+  builtin trap "${Watchgate[shred]} -fu \\$tmpfile" SIGHUP SIGTERM SIGINT
+  declare -a Users=(\\$(${Watchgate[cut]} -d':' -f1,3 /etc/passwd|\
     ${Watchgate[egrep]} ":[[:digit:]]{4}|:0"|\
     ${Watchgate[cut]} -d':' -f1|\
     ${Watchgate[egrep]} -v ${Watchgate[excludeuser]}))
   local i user word timestamp
-  timestamp=\$(${Watchgate[date]} +"%Y%m%d%H%M")
-  for user in \${Users[@]};do
-    builtin printf "\$user:" >>\$tmpfile
+  timestamp=\\$(${Watchgate[date]} +"%Y%m%d%H%M")
+  for user in \\${Users[@]};do
+    builtin printf "\\$user:" >>\\$tmpfile
     ${Watchgate[pwgen]} --capitalize --numerals \
-      --num-passwords=1 --secure --sha1=\$seed#\$user\$timestamp 8 >>\$tmpfile
+      --num-passwords=1 --secure --sha1=\\$seed#\\$user\\$timestamp 8 >>\\$tmpfile
   done
-  ${Watchgate[chpasswd]} <\$tmpfile
-  ${Watchgate[shred]} -fu \$tmpfile
+  ${Watchgate[chpasswd]} <\\$tmpfile
+  ${Watchgate[shred]} -fu \\$tmpfile
 #set +o xtrace
 }
 ${Watchgate[cronscript]}
