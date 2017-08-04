@@ -15,9 +15,9 @@ Watchgate[mandir]=/usr/local/man/man1/
 Watchgate[excludeuser]=www
 unset cmdlist cmd i
 
-watchgate.mutation()
+watchgate.substitution()
 {
-  builtin source <(${Watchgate[cat]}<<-MUT
+  builtin source <(${Watchgate[cat]}<<-SUB
 
 watchgate.query()
 {
@@ -201,9 +201,9 @@ watchgate.timer()
 {
   ${Watchgate[systemctl]} list-timers --all
 }
-MUT
+SUB
   )
 }
-watchgate.mutation
-builtin unset -f watchgate.mutation
+watchgate.substitution
+builtin unset -f watchgate.substitution
 builtin unset Watchgate
