@@ -6,5 +6,11 @@ for cmd in $cmdlist;do
   [[ X$i == X ]] && return
   Watchgate["$cmd"]="$i"
 done
+Watchgate[prefix]=/usr/local/bin
+Watchgate[cronscript]=watchgate.cron
+Watchgate[queryscript]=watchgate
+Watchgate[configdir]=/etc/watchgate
+Watchgate[seedprefix]=watchgate_${Watchgate[hostname]}
+Watchgate[mandir]=/usr/local/man/man1
 unset cmdlist cmd i
 source watchgate.sh

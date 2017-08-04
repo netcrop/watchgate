@@ -21,7 +21,7 @@ watchgate()
 }
 watchgate.gen()
 {
-  local destfile=/usr/local/bin/watchgate
+  local destfile=/usr/local/bin/watchgate.cron
   [[ -a $destfile ]] && ${Watchgate[sudo]} ${Watchgate[rm]} -f $destfile
   ${Watchgate[cat]}<<-EOF>$destfile
 #!${Watchgate[env]} /bin/bash
