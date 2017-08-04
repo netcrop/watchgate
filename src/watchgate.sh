@@ -136,8 +136,8 @@ watchgate.seed.uninstall()
 {
   ${Watchgate[sudo]} ${Watchgate[rm]} -f ${Watchgate[configdir]}${Watchgate[seedprefix]}.asc
   ${Watchgate[sudo]} ${Watchgate[rm]} -f ${Watchgate[configdir]}${Watchgate[seedprefix]}
-  ${Watchgate[sudo]} ${Watchgate[rm]} -f ${Watchgate[configdir]}"${Watchgate[seedprefix]}_*".asc
-  ${Watchgate[sudo]} ${Watchgate[rm]} -f ${Watchgate[configdir]}"${Watchgate[seedprefix]}_*"
+  ${Watchgate[sudo]} ${Watchgate[rm]} -f ${Watchgate[configdir]}${Watchgate[seedprefix]}_*.asc
+  ${Watchgate[sudo]} ${Watchgate[rm]} -f ${Watchgate[configdir]}${Watchgate[seedprefix]}_*
 }
 watchgate.enable()
 {
