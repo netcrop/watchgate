@@ -15,7 +15,7 @@ OpenPGP version 2+
 ```
 # Following Bash functions use sudo
 eva@node: cd src/
-eva@node: source watchagate.sh
+eva@node: source configure.sh
 
 # Install/Uninstall the systemd timer service (alt. Cron service),
 # which include $prefix/watchgate.cron (a TOTP Bash script run by Cron service),
