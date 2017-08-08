@@ -7,7 +7,10 @@ watchgate.substitution()
   sha512sum gpg2 shred mkdir systemctl'
   for cmd in $cmdlist;do
     i="$(which $cmd)"
-    [[ X$i == X ]] && return
+    if [[ -z $i ]];then
+      printf "missing $cmd"
+      return
+    fi
     Watchgate["$cmd"]="$i"
   done
   Watchgate[prefix]=/usr/local/bin/
