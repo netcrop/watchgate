@@ -4,7 +4,7 @@ watchgate.substitution()
 {
   local cmd i cmdlist='sed basename cat id cut bash man mktemp egrep
   date env mv chpasswd pwgen hostname sudo cp chmod ln chown rm sha1sum
-  sha512sum gpg2 shred mkdir systemctl'
+  sha512sum gpg shred mkdir systemctl'
   for cmd in $cmdlist;do
     i="$(which $cmd)"
     if [[ -z $i ]];then
@@ -38,7 +38,7 @@ ${Watchgate[queryscript]}()
   if [[ -a \\\$seed && -r \\\$seed.asc ]];then
     local tmpfile=\\\$(mktemp)
     builtin trap "${Watchgate[shred]} -u \\\$tmpfile" SIGHUP SIGTERM SIGINT
-    ${Watchgate[gpg2]} --homedir \\\$HOME/.gnupg --no-tty --decrypt --no-verbose --quiet \\\$seed.asc >\\\$tmpfile
+    ${Watchgate[gpg]} --homedir \\\$HOME/.gnupg --no-tty --decrypt --no-verbose --quiet \\\$seed.asc >\\\$tmpfile
     if [[ \\\$? != 0 ]];then
       builtin printf "Try using same gpg-agent to login all account.\n"
       return
@@ -129,7 +129,7 @@ watchgate.seed()
   local tmpfile=\$(${Watchgate[mktemp]})
   builtin trap "${Watchgate[shred]} -u $tmpfile" SIGHUP SIGTERM SIGINT
   ${Watchgate[sha512sum]} <<<\$RANDOM|${Watchgate[cut]} -d' ' -f1 > \$tmpfile
-  ${Watchgate[gpg2]} --symmetric --no-verbose --quiet --output \$destdir/\$seed.asc --armor \$tmpfile
+  ${Watchgate[gpg]} --symmetric --no-verbose --quiet --output \$destdir/\$seed.asc --armor \$tmpfile
   ${Watchgate[shred]} -fu \$tmpfile
 }
 watchgate.seed.install()
@@ -139,7 +139,7 @@ watchgate.seed.install()
   local destseed=${Watchgate[configdir]}/\$seed
   local tmpfile=\$(mktemp)
   builtin trap "${Watchgate[shred]} -u \$tmpfile" SIGHUP SIGTERM SIGINT
-  ${Watchgate[gpg2]} --no-tty --decrypt --no-verbose --quiet \$seedasc >\$tmpfile
+  ${Watchgate[gpg]} --no-tty --decrypt --no-verbose --quiet \$seedasc >\$tmpfile
   if [[ \$? != 0 ]];then
     ${Watchgate[shred]} -fu \$tmpfile
     return
