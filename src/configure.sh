@@ -28,7 +28,7 @@ watchgate.query()
 #  set -o xtrace
   [[ -a ${Watchgate[prefix]}${Watchgate[queryscript]} ]] \
     && ${Watchgate[sudo]} ${Watchgate[rm]} -f ${Watchgate[prefix]}${Watchgate[queryscript]}
-   ${Watchgate[sudo]} ${Watchgate[cat]}<<-EOF> ${Watchgate[prefix]}${Watchgate[queryscript]}
+   ${Watchgate[sudo]} ${Watchgate[cat]}<<-QUERY> ${Watchgate[prefix]}${Watchgate[queryscript]}
 #!${Watchgate[env]} ${Watchgate[bash]}
 ${Watchgate[queryscript]}()
 {
@@ -38,7 +38,7 @@ ${Watchgate[queryscript]}()
   if [[ -a \\\$seed && -r \\\$seed.asc ]];then
     local tmpfile=\\\$(mktemp)
     builtin trap "${Watchgate[shred]} -u \\\$tmpfile" SIGHUP SIGTERM SIGINT
-    builtin declare -x GPG_TTY="\$(${Watchgate[tty]})"
+    builtin declare -x GPG_TTY="\\\$(${Watchgate[tty]})"
     ${Watchgate[gpg]} --homedir \\\$HOME/.gnupg --no-tty --decrypt --no-verbose --quiet \\\$seed.asc >\\\$tmpfile
     if [[ \\\$? != 0 ]];then
       builtin printf "Try using same gpg-agent to login all account.\n"
@@ -54,7 +54,7 @@ ${Watchgate[queryscript]}()
     --secure --sha1=/dev/null#"\\\$user\\\$(${Watchgate[date]} +"%Y%m%d%H%M")" 8
 }
 ${Watchgate[queryscript]} "\\\$@"
-EOF
+QUERY
   ${Watchgate[sudo]} ${Watchgate[chmod]} u=rx,g=rx,o= ${Watchgate[prefix]}${Watchgate[queryscript]}
   ${Watchgate[sudo]} ${Watchgate[chown]} root:users ${Watchgate[prefix]}${Watchgate[queryscript]}
 #  set +o xtrace
@@ -63,7 +63,7 @@ watchgate.cron()
 {
   [[ -a ${Watchgate[prefix]}${Watchgate[cronscript]} ]] \
     && ${Watchgate[sudo]} ${Watchgate[rm]} -f ${Watchgate[prefix]}${Watchgate[cronscript]}
-  ${Watchgate[sudo]} ${Watchgate[cat]}<<-EOF> ${Watchgate[prefix]}${Watchgate[cronscript]}
+  ${Watchgate[sudo]} ${Watchgate[cat]}<<-CRON> ${Watchgate[prefix]}${Watchgate[cronscript]}
 #!${Watchgate[env]} ${Watchgate[bash]}
 ${Watchgate[cronscript]}()
 {
@@ -92,7 +92,7 @@ ${Watchgate[cronscript]}()
 #set +o xtrace
 }
 ${Watchgate[cronscript]}
-EOF
+CRON
   ${Watchgate[sudo]} ${Watchgate[chmod]} u=rx,go= ${Watchgate[prefix]}${Watchgate[cronscript]}
   ${Watchgate[sudo]} ${Watchgate[chown]} root:users ${Watchgate[prefix]}${Watchgate[cronscript]}
 }
