@@ -130,6 +130,7 @@ watchgate.seed()
   local tmpfile=\$(${Watchgate[mktemp]})
   builtin trap "${Watchgate[shred]} -u $tmpfile" SIGHUP SIGTERM SIGINT
   ${Watchgate[sha512sum]} <<<\$RANDOM|${Watchgate[cut]} -d' ' -f1 > \$tmpfile
+  builtin declare -x GPG_TTY="\$(${Watchgate[tty]})"
   ${Watchgate[gpg]} --symmetric --no-verbose --quiet --output \$destdir/\$seed.asc --armor \$tmpfile
   ${Watchgate[shred]} -fu \$tmpfile
 }
@@ -140,6 +141,7 @@ watchgate.seed.install()
   local destseed=${Watchgate[configdir]}/\$seed
   local tmpfile=\$(mktemp)
   builtin trap "${Watchgate[shred]} -u \$tmpfile" SIGHUP SIGTERM SIGINT
+  builtin declare -x GPG_TTY="\$(${Watchgate[tty]})"
   ${Watchgate[gpg]} --no-tty --decrypt --no-verbose --quiet \$seedasc >\$tmpfile
   if [[ \$? != 0 ]];then
     ${Watchgate[shred]} -fu \$tmpfile
