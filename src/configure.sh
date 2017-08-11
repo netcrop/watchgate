@@ -41,7 +41,7 @@ ${Watchgate[queryscript]}()
     builtin declare -x GPG_TTY="\\\$(${Watchgate[tty]})"
     ${Watchgate[gpg]} --homedir \\\$HOME/.gnupg --no-tty --decrypt --no-verbose --quiet \\\$seed.asc >\\\$tmpfile
     if [[ \\\$? != 0 ]];then
-      builtin printf "Try using same gpg-agent to login all account.\n"
+      builtin printf "Try using same gpg-agent and tty to query password.\n"
       return
     fi
     ${Watchgate[pwgen]} --capitalize --numerals --num-passwords=1 \
