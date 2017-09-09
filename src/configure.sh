@@ -34,8 +34,7 @@ ${Watchgate[queryscript]}()
 {
   local user=\\\${1:?[user]}
   local seed=\\\${2:-"${Watchgate[configdir]}${Watchgate[seedprefix]}"}
-  local display=
-  if [[ -a \\\$seed && -r \\\$seed.asc ]];then
+  if [[ -r \\\${2} || -a \\\$seed && -r \\\$seed.asc ]];then
     local tmpfile=\\\$(${Watchgate[mktemp]})
     builtin trap "${Watchgate[shred]} -u \\\$tmpfile" SIGHUP SIGTERM SIGINT
     builtin declare -x GPG_TTY="\\\$(${Watchgate[tty]})"
