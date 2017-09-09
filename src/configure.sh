@@ -131,6 +131,7 @@ watchgate.uninstall()
 watchgate.seed()
 {
   local destdir=\${1:?[seed dest dir]}
+  [[ -d \$destdir ]] || return
   local seed="${Watchgate[seedprefix]}_\$(${Watchgate[date]} +"%Y%m%d%H%M%S")"
   local tmpfile=\$(${Watchgate[mktemp]})
   builtin trap "${Watchgate[shred]} -u $tmpfile" SIGHUP SIGTERM SIGINT
