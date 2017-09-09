@@ -33,7 +33,7 @@ watchgate.query()
 ${Watchgate[queryscript]}()
 {
 #  set -o xtrace
-  local user=\\\${1:?[user]}
+  local user=\\\${1:?[user][optional stored seed sec file]}
   local seed=\\\${2:-"${Watchgate[configdir]}${Watchgate[seedprefix]}"}
   seed=\\\${seed%.asc}
   if [[ -r \\\${2} || -a \\\$seed && -r \\\$seed.asc ]];then
