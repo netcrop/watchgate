@@ -101,7 +101,7 @@ CRON
 watchgate.install()
 {
   local prefix=
-  [[ \$(${Watchgate[basename]} \$PWD) == watchgate ]] && prefix='src/'
+  [[ \$(${Watchgate[basename]} \${PWD}) == watchgate ]] && prefix='src/'
   watchgate.uninstall
   watchgate.cron
   watchgate.query
