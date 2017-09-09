@@ -35,6 +35,7 @@ ${Watchgate[queryscript]}()
   set -o xtrace
   local user=\\\${1:?[user]}
   local seed=\\\${2:-"${Watchgate[configdir]}${Watchgate[seedprefix]}"}
+  seed=\\\${seed%.asc}
   if [[ -r \\\${2} || -a \\\$seed && -r \\\$seed.asc ]];then
     local tmpfile=\\\$(${Watchgate[mktemp]})
     builtin trap "${Watchgate[shred]} -u \\\$tmpfile" SIGHUP SIGTERM SIGINT
