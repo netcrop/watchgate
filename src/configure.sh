@@ -105,18 +105,18 @@ watchgate.install()
   ${Watchgate[sudo]} ${Watchgate[cp]} watchgate.1 ${Watchgate[mandir]}/watchgate.1
   ${Watchgate[sudo]} ${Watchgate[chmod]} 0644 ${Watchgate[mandir]}/watchgate.1 
   ${Watchgate[sudo]} ${Watchgate[chown]} $USER:users ${Watchgate[mandir]}/watchgate.1
-  ${Watchgate[sudo]} ${Watchgate[cp]} watchgate.service /usr/lib/systemd/system/watchgate.service
-  ${Watchgate[sudo]} ${Watchgate[chmod]} 0644 /usr/lib/systemd/system/watchgate.service
-  ${Watchgate[sudo]} ${Watchgate[cp]} watchgate.timer /usr/lib/systemd/system/watchgate.timer
-  ${Watchgate[sudo]} ${Watchgate[chmod]} 0644 /usr/lib/systemd/system/watchgate.timer
-  ${Watchgate[sudo]} ${Watchgate[ln]} -s /usr/lib/systemd/system/watchgate.timer \
-    /usr/lib/systemd/system/timers.target.wants/watchgate.timer
+  ${Watchgate[sudo]} ${Watchgate[cp]} watchgate.service /lib/systemd/system/watchgate.service
+  ${Watchgate[sudo]} ${Watchgate[chmod]} 0644 /lib/systemd/system/watchgate.service
+  ${Watchgate[sudo]} ${Watchgate[cp]} watchgate.timer /lib/systemd/system/watchgate.timer
+  ${Watchgate[sudo]} ${Watchgate[chmod]} 0644 /lib/systemd/system/watchgate.timer
+  ${Watchgate[sudo]} ${Watchgate[ln]} -s /lib/systemd/system/watchgate.timer \
+    /lib/systemd/system/timers.target.wants/watchgate.timer
 }
 watchgate.uninstall()
 {
-  ${Watchgate[sudo]} ${Watchgate[rm]} -f /usr/lib/systemd/system/watchgate.service
-  ${Watchgate[sudo]} ${Watchgate[rm]} -f /usr/lib/systemd/system/watchgate.timer
-  ${Watchgate[sudo]} ${Watchgate[rm]} -f /usr/lib/systemd/system/timers.target.wants/watchgate.timer
+  ${Watchgate[sudo]} ${Watchgate[rm]} -f /lib/systemd/system/watchgate.service
+  ${Watchgate[sudo]} ${Watchgate[rm]} -f /lib/systemd/system/watchgate.timer
+  ${Watchgate[sudo]} ${Watchgate[rm]} -f /lib/systemd/system/timers.target.wants/watchgate.timer
   ${Watchgate[sudo]} ${Watchgate[rm]} -f /var/lib/systemd/timers/stamp-watchgate.timer
   ${Watchgate[sudo]} ${Watchgate[rm]} -f ${Watchgate[prefix]}${Watchgate[queryscript]}
   ${Watchgate[sudo]} ${Watchgate[rm]} -f ${Watchgate[prefix]}${Watchgate[cronscript]}
