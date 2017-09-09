@@ -134,6 +134,7 @@ watchgate.seed()
   builtin declare -x GPG_TTY="\$(${Watchgate[tty]})"
   ${Watchgate[gpg]} --symmetric --no-verbose --quiet --output \$destdir/\$seed.asc --armor \$tmpfile
   ${Watchgate[shred]} -fu \$tmpfile
+  ${Watchgate[chmod]} 0400 \$destdir/\$seed.asc
 }
 watchgate.seed.install()
 {
