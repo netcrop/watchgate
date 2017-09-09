@@ -207,7 +207,7 @@ watchgate.units()
 }
 watchgate.timer()
 {
-  ${Watchgate[systemctl]} list-timers --all
+  ${Watchgate[systemctl]} list-timers
 }
 SUB
   )
