@@ -69,13 +69,15 @@ adam@node:
 ## For developers
 
 
-* Releases
-
-  [incompatible API].[new functionality/documentation].[bugfix/securityfix]  
-**alpha** denotes a **pre-release** tag .  
-**beta** denotes a testing **release** tag.  
-e.g. v0.2a is a alpha pre-release, v0.2b is a testing release,  
-and v1.0 is a stable release.  
+* Using Rolling Releases
+```
+eva@node: git branch -avv
+*  alpha
+  arch
+  debian
+  master
+eva@node: git checkout debian
+```
 
 
 ## Reporting a bug and security issues
