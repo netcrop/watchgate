@@ -105,12 +105,12 @@ watchgate.install()
   watchgate.query
   ${Watchgate[sudo]} ${Watchgate[mkdir]} -p ${Watchgate[mandir]}
   ${Watchgate[sudo]} ${Watchgate[chmod]} 0755 ${Watchgate[mandir]}
-  ${Watchgate[sudo]} ${Watchgate[cp]} watchgate.1 ${Watchgate[mandir]}/watchgate.1
+  ${Watchgate[sudo]} ${Watchgate[cp]} src/watchgate.1 ${Watchgate[mandir]}/watchgate.1
   ${Watchgate[sudo]} ${Watchgate[chmod]} 0644 ${Watchgate[mandir]}/watchgate.1 
   ${Watchgate[sudo]} ${Watchgate[chown]} $USER:users ${Watchgate[mandir]}/watchgate.1
-  ${Watchgate[sudo]} ${Watchgate[cp]} watchgate.service /lib/systemd/system/watchgate.service
+  ${Watchgate[sudo]} ${Watchgate[cp]} src/watchgate.service /lib/systemd/system/watchgate.service
   ${Watchgate[sudo]} ${Watchgate[chmod]} 0644 /lib/systemd/system/watchgate.service
-  ${Watchgate[sudo]} ${Watchgate[cp]} watchgate.timer /lib/systemd/system/watchgate.timer
+  ${Watchgate[sudo]} ${Watchgate[cp]} src/watchgate.timer /lib/systemd/system/watchgate.timer
   ${Watchgate[sudo]} ${Watchgate[chmod]} 0644 /lib/systemd/system/watchgate.timer
   ${Watchgate[sudo]} ${Watchgate[ln]} -s /lib/systemd/system/watchgate.timer \
     /lib/systemd/system/timers.target.wants/watchgate.timer
