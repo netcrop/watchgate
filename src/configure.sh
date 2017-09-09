@@ -102,6 +102,7 @@ watchgate.install()
   watchgate.cron
   watchgate.query
   ${Watchgate[sudo]} ${Watchgate[mkdir]} -p ${Watchgate[mandir]}
+  ${Watchgate[sudo]} ${Watchgate[chmod]} 0755 ${Watchgate[mandir]}
   ${Watchgate[sudo]} ${Watchgate[cp]} watchgate.1 ${Watchgate[mandir]}/watchgate.1
   ${Watchgate[sudo]} ${Watchgate[chmod]} 0644 ${Watchgate[mandir]}/watchgate.1 
   ${Watchgate[sudo]} ${Watchgate[chown]} $USER:users ${Watchgate[mandir]}/watchgate.1
