@@ -36,7 +36,7 @@ ${Watchgate[queryscript]}()
   local seed=\\\${2:-"${Watchgate[configdir]}${Watchgate[seedprefix]}"}
   local display=
   if [[ -a \\\$seed && -r \\\$seed.asc ]];then
-    local tmpfile=\\\$(mktemp)
+    local tmpfile=\\\$(${Watchgate[mktemp]})
     builtin trap "${Watchgate[shred]} -u \\\$tmpfile" SIGHUP SIGTERM SIGINT
     builtin declare -x GPG_TTY="\\\$(${Watchgate[tty]})"
     ${Watchgate[gpg]} --homedir \\\$HOME/.gnupg --no-tty --decrypt --no-verbose --quiet \\\$seed.asc >\\\$tmpfile
@@ -141,7 +141,7 @@ watchgate.seed.install()
   local seedasc=\${1:?[watchgate_\$hostname_\$date.asc file]}
   local seed=\$(${Watchgate[basename]} \${seedasc%.asc})
   local destseed=${Watchgate[configdir]}/\$seed
-  local tmpfile=\$(mktemp)
+  local tmpfile=\$(${Watchgate[mktemp]})
   builtin trap "${Watchgate[shred]} -u \$tmpfile" SIGHUP SIGTERM SIGINT
   builtin declare -x GPG_TTY="\$(${Watchgate[tty]})"
   ${Watchgate[gpg]} --no-tty --decrypt --no-verbose --quiet \$seedasc >\$tmpfile
