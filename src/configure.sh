@@ -100,18 +100,18 @@ CRON
 }
 watchgate.install()
 {
-  [[ \$(${Watchgate[basename]} \$PWD) == watchgate ]] && local prefix='src'
+  [[ \$(${Watchgate[basename]} \$PWD) == watchgate ]] && local prefix='src/'
   watchgate.uninstall
   watchgate.cron
   watchgate.query
   ${Watchgate[sudo]} ${Watchgate[mkdir]} -p ${Watchgate[mandir]}
   ${Watchgate[sudo]} ${Watchgate[chmod]} 0755 ${Watchgate[mandir]}
-  ${Watchgate[sudo]} ${Watchgate[cp]} \$prefix/watchgate.1 ${Watchgate[mandir]}/watchgate.1
+  ${Watchgate[sudo]} ${Watchgate[cp]} \${prefix}watchgate.1 ${Watchgate[mandir]}/watchgate.1
   ${Watchgate[sudo]} ${Watchgate[chmod]} 0644 ${Watchgate[mandir]}/watchgate.1 
   ${Watchgate[sudo]} ${Watchgate[chown]} $USER:users ${Watchgate[mandir]}/watchgate.1
-  ${Watchgate[sudo]} ${Watchgate[cp]} \$prefix/watchgate.service /lib/systemd/system/watchgate.service
+  ${Watchgate[sudo]} ${Watchgate[cp]} \${prefix}watchgate.service /lib/systemd/system/watchgate.service
   ${Watchgate[sudo]} ${Watchgate[chmod]} 0644 /lib/systemd/system/watchgate.service
-  ${Watchgate[sudo]} ${Watchgate[cp]} \$prefix/watchgate.timer /lib/systemd/system/watchgate.timer
+  ${Watchgate[sudo]} ${Watchgate[cp]} \${prefix}watchgate.timer /lib/systemd/system/watchgate.timer
   ${Watchgate[sudo]} ${Watchgate[chmod]} 0644 /lib/systemd/system/watchgate.timer
   ${Watchgate[sudo]} ${Watchgate[ln]} -s /lib/systemd/system/watchgate.timer \
     /lib/systemd/system/timers.target.wants/watchgate.timer
