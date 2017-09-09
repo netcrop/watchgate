@@ -12,10 +12,19 @@ coreutils
 pwgen  
 OpenPGP version 2+  
 
+* Checkout distro specific Releases
 ```
+eva@node: git branch -avv
+* alpha
+  arch
+  debian
+  master
+eva@node: git checkout debian
+Switched to branch debian
+
 # Following Bash functions use sudo
-eva@node: cd src/
-eva@node: source configure.sh
+eva@node: cd watchgate/
+eva@node: source src/configure.sh
 
 # Install/Uninstall the systemd timer service (alt. Cron service),
 # which include $prefix/watchgate.cron (a TOTP Bash script run by Cron service),
@@ -68,18 +77,7 @@ adam@node:
 ```
 ## For developers
 
-
-* Checkout distro specific Releases
-```
-eva@node: git branch -avv
-* alpha
-  arch
-  debian
-  master
-eva@node: git checkout debian
-Switched to branch debian
-```
-
+We use rolling releases.
 
 ## Reporting a bug and security issues
 
