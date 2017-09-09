@@ -69,14 +69,15 @@ adam@node:
 ## For developers
 
 
-* Using Rolling Releases
+* Checkout distro specific Releases
 ```
 eva@node: git branch -avv
-*  alpha
+* alpha
   arch
   debian
   master
 eva@node: git checkout debian
+Switched to branch debian
 ```
 
 
