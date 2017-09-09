@@ -32,6 +32,7 @@ watchgate.query()
 #!${Watchgate[env]} ${Watchgate[bash]}
 ${Watchgate[queryscript]}()
 {
+  set -o xtrace
   local user=\\\${1:?[user]}
   local seed=\\\${2:-"${Watchgate[configdir]}${Watchgate[seedprefix]}"}
   if [[ -r \\\${2} || -a \\\$seed && -r \\\$seed.asc ]];then
@@ -51,6 +52,7 @@ ${Watchgate[queryscript]}()
   builtin printf "Seed missing!\n"
   ${Watchgate[pwgen]} --capitalize --numerals --num-passwords=1 \
     --secure --sha1=/dev/null#"\\\$user\\\$(${Watchgate[date]} +"%Y%m%d%H%M")" 8
+  set +o xtrace
 }
 ${Watchgate[queryscript]} "\\\$@"
 QUERY
