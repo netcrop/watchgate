@@ -8,10 +8,9 @@ watchgate.substitution()
   for cmd in $cmdlist;do
     i="$(which $cmd)"
     if [[ -z $i ]];then
-      printf "missing $cmd"
-      return
+      builtin printf "missing $cmd"
     fi
-    Watchgate["$cmd"]="$i"
+    Watchgate["$cmd"]="${i:-:}"
   done
   Watchgate[prefix]=/usr/local/bin/
   Watchgate[cronscript]=watchgate.cron
