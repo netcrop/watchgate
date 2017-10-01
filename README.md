@@ -15,8 +15,8 @@ OpenPGP version 2+
 * Checkout distro specific Releases
 ```
 eva@node: git branch -avv
-* alpha
-  arch
+  alpha
+*  arch
   debian
   master
 eva@node: git checkout debian
