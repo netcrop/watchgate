@@ -62,6 +62,7 @@ QUERY
 }
 watchgate.cron()
 {
+  local excludeuser=\${1:?[exclude user]}
   [[ -a ${Watchgate[prefix]}${Watchgate[cronscript]} ]] \
     && ${Watchgate[sudo]} ${Watchgate[rm]} -f ${Watchgate[prefix]}${Watchgate[cronscript]}
   ${Watchgate[sudo]} ${Watchgate[cat]}<<-CRON> ${Watchgate[prefix]}${Watchgate[cronscript]}
@@ -80,7 +81,7 @@ ${Watchgate[cronscript]}()
   declare -a Users=(\\\$(${Watchgate[cut]} -d':' -f1,3 /etc/passwd|\
     ${Watchgate[egrep]} ":[[:digit:]]{4}|:0"|\
     ${Watchgate[cut]} -d':' -f1|\
-    ${Watchgate[egrep]} -v ${Watchgate[excludeuser]}))
+    ${Watchgate[egrep]} -v \${excludeuser}))
   local i user word timestamp
   timestamp=\\\$(${Watchgate[date]} +"%Y%m%d%H%M")
   for user in \\\${Users[@]};do
@@ -102,7 +103,7 @@ watchgate.install()
   local prefix=
   [[ \$(${Watchgate[basename]} \${PWD}) == watchgate ]] && prefix='src/'
   watchgate.uninstall
-  watchgate.cron
+  watchgate.cron \${1:?[exclude user]}
   watchgate.query
   ${Watchgate[sudo]} ${Watchgate[mkdir]} -p ${Watchgate[mandir]}
   ${Watchgate[sudo]} ${Watchgate[chmod]} 0755 ${Watchgate[mandir]}
