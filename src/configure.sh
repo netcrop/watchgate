@@ -18,7 +18,6 @@ watchgate.substitution()
   Watchgate[configdir]=/etc/watchgate/
   Watchgate[seedprefix]=watchgate_$(${Watchgate[hostname]})
   Watchgate[mandir]=/usr/local/man/man1/
-  Watchgate[excludeuser]=www
   Watchgate[systemddir]=/lib/systemd/system/
   builtin source <(${Watchgate[cat]}<<-SUB
 
