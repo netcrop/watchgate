@@ -4,7 +4,7 @@ watchgate.substitution()
 {
   local cmd i cmdlist='sed basename cat id cut bash man mktemp egrep
   date env mv chpasswd pwgen hostname sudo cp chmod ln chown rm sha1sum
-  sha512sum gpg shred mkdir systemctl tty'
+  sha512sum gpg shred mkdir systemctl tty head cut'
   for cmd in $cmdlist;do
     i="$(which $cmd)"
     if [[ -z $i ]];then
@@ -134,7 +134,7 @@ watchgate.seed()
   local seed="${Watchgate[seedprefix]}_\$(${Watchgate[date]} +"%Y%m%d%H%M%S")"
   local tmpfile=\$(${Watchgate[mktemp]})
   builtin trap "${Watchgate[shred]} -u $tmpfile" SIGHUP SIGTERM SIGINT
-  ${Watchgate[sha512sum]} <<<\$RANDOM|${Watchgate[cut]} -d' ' -f1 > \$tmpfile
+  ${Watchgate[sha512sum]} <<<\${Watchgate[head]} -c 1000 /dev/random | ${Watchgate[cut]} -d' ' -f1 >\$tmpfile
   builtin declare -x GPG_TTY="\$(${Watchgate[tty]})"
   ${Watchgate[gpg]} --symmetric --no-verbose --quiet --output \$destdir/\$seed.asc --armor \$tmpfile
   ${Watchgate[shred]} -fu \$tmpfile
