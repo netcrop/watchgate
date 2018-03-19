@@ -15,7 +15,7 @@ An associative array contains absolute path to executable commands will be expor
 Install/Uninstall the systemd timer service (alt. Cron service), which include $prefix/watchgate.cron (a TOTP Bash script run by Cron service), $prefix/watchgate (password query script, run by login user), watchgate.timer (systemd timer), watchgate.service (systemd service) and watchgate.1 (the Man page).
 .TP
 .I "watchgate.seed"
-Generate a secret "seed" file using sha512sum of a random number, encrypt/sign it with OpenPGP DES 128.
+Generate a secret "seed" file using sha512sum from /dev/random, encrypt/sign it with OpenPGP DES 128.
 .TP
 .I "watchgate.seed.install/uninstall"
 Install/Uninstall both the secret seed and encrypted seed.asc into /etc/watchgate/. The secret seed will only be visible for root user (User=root in systemd timer service).
