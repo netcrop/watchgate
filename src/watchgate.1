@@ -36,7 +36,7 @@ written by Yang Li.
 .SH REPORTING BUGS
 github.com/netcrop/watchgate
 .SH LIMITATIONS
-A single user/admin account on one machine has to be left out without using TOTP but a static password. A human needs this account for login to other accounts in local or remote machine/VMs.
+A single user account on one machine has to be left out without using TOTP but a static password. A human needs this account for further login to other accounts in local or remote machine/VMs.
 .SH LICENSE
 GNU GENERAL PUBLIC LICENSE Version 2
 
@@ -50,9 +50,9 @@ GNU GENERAL PUBLIC LICENSE Version 2
   Aug 03 22:33:00 node systemd[1]: Started watchgate.service.
   
   From console prompt at Aug 03 22:33:05 node: 
-  eve > watchgate adam
+  eva > watchgate adam
   LeKy3QVU
-  eve > su -l adam
+  eva > su -l adam
   Password:
   adam >
 
@@ -62,8 +62,8 @@ GNU GENERAL PUBLIC LICENSE Version 2
   Aug 03 22:34:00 node systemd[1]: Started watchgate.service.
   
   From console prompt at Aug 03 22:34:20 node: 
-  eve > watchgate adam
+  eva > watchgate adam
   IekIa3w9
-  eve > su -l adam
+  eva > su -l adam
   Password:
   adam >
