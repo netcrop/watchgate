@@ -25,7 +25,7 @@ Manage systemd timer service.
 .SH SCRIPTS
 .TP
 .I "$prefix/watchgate.cron"
-Generate a TOTP, based on the secret seed, current time stamp and user account name. Also changes a set of chosen accounts (effective user ID greater then 1000 and 0 - root) password with these new generated one.
+Generate a TOTP, based on the secret seed, current time stamp and user account name. Also changes a set of chosen accounts (users whose SHELL isn't nologin) password with these new generated one.
 .TP
 .I "$prefix/watchgate"
 Decrypt the secret seed.asc file and generate a TOTP based on the same seed, current time stamp and user account name. Also print the generated password to stdout for login purpose. Within the same time period (default one minute) these passwords are identical to what "/usr/local/bin/watchgate" had generated and changed.
