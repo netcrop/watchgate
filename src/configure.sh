@@ -73,10 +73,8 @@ set -o xtrace
   fi
   local tmpfile=\$(${Watchgate[mktemp]})
   builtin trap "${Watchgate[shred]} -fu \$tmpfile" SIGHUP SIGTERM SIGINT
-  declare -a Users=(\$(${Watchgate[cut]} -d':' -f1,7 /etc/passwd|\
-    ${Watchgate[egrep]} -v "nologin"|\
-    ${Watchgate[cut]} -d':' -f1|\
-    ${Watchgate[egrep]} -v \${excludeuser}))
+  declare -a Users=(\$(${Watchgate[egrep]} -v "nologin" /etc/passwd|\
+    ${Watchgate[egrep]} -v ^"\${excludeuser}"))
   local i user word timestamp
   timestamp=\$(${Watchgate[date]} +"%Y%m%d%H%M")
   for user in \${Users[@]};do
