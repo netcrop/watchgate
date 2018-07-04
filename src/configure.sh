@@ -58,7 +58,7 @@ watchgate.query()
 \${fun} "\\\$@"
 WATCHGATEQUERY
   ${Watchgate[chmod]} gu=rx,o= \${script}
-  ${Watchgate[chown]} $USER:users \${script}
+  ${Watchgate[chown]} $USER:wheel \${script}
   \builtin unset -f \${fun}
 }
 watchgate.cron()
@@ -101,7 +101,7 @@ watchgate.cron.install()
 \${fun} "\${excludeuser}"
 WATCHGATECRONINSTALL
   ${Watchgate[sudo]} ${Watchgate[chmod]} u=rx,go= \${script}
-  ${Watchgate[sudo]} ${Watchgate[chown]} root:users \${script}
+  ${Watchgate[sudo]} ${Watchgate[chown]} root:wheel \${script}
   \builtin unset -f \${fun}
 }
 watchgate.install()
@@ -116,18 +116,8 @@ watchgate.install()
   ${Watchgate[sudo]} ${Watchgate[cp]} \${prefix}watchgate.1 \
   ${Watchgate[mandir]}/watchgate.1
   ${Watchgate[sudo]} ${Watchgate[chmod]} 0644 ${Watchgate[mandir]}/watchgate.1 
-  ${Watchgate[sudo]} ${Watchgate[chown]} $USER:users \
+  ${Watchgate[sudo]} ${Watchgate[chown]} $USER:wheel \
   ${Watchgate[mandir]}/watchgate.1
-  ${Watchgate[sudo]} ${Watchgate[cp]} \${prefix}watchgate.service \
-  ${Watchgate[systemddir]}/watchgate.service
-  ${Watchgate[sudo]} ${Watchgate[chmod]} 0644 \
-  ${Watchgate[systemddir]}/watchgate.service
-  ${Watchgate[sudo]} ${Watchgate[cp]} \${prefix}watchgate.timer \
-  ${Watchgate[systemddir]}/watchgate.timer
-  ${Watchgate[sudo]} ${Watchgate[chmod]} 0644 \
-  ${Watchgate[systemddir]}/watchgate.timer
-  ${Watchgate[sudo]} ${Watchgate[ln]} -s ${Watchgate[systemddir]}/watchgate.timer \
-     ${Watchgate[systemddir]}/timers.target.wants/watchgate.timer
 }
 watchgate.uninstall()
 {
@@ -175,14 +165,14 @@ watchgate.seed.install()
   fi
   ${Watchgate[sudo]} ${Watchgate[mkdir]} -p ${Watchgate[configdir]}
   ${Watchgate[sudo]} ${Watchgate[chmod]} ug=rx,o= ${Watchgate[configdir]}
-  ${Watchgate[sudo]} ${Watchgate[chown]} root:users ${Watchgate[configdir]}
+  ${Watchgate[sudo]} ${Watchgate[chown]} root:wheel ${Watchgate[configdir]}
   [[ -a \$destseed ]] && ${Watchgate[sudo]} ${Watchgate[shred]} -fu \$destseed
   [[ -a \$destseed.asc ]] && \
   ${Watchgate[sudo]} ${Watchgate[shred]} -fu \$destseed.asc
   ${Watchgate[sudo]} ${Watchgate[cp]} -f \$seedasc \$destseed.asc 
   ${Watchgate[sudo]} ${Watchgate[mv]} -f \$tmpfile \$destseed
   ${Watchgate[sudo]} ${Watchgate[chmod]} 0440 \$destseed.asc
-  ${Watchgate[sudo]} ${Watchgate[chown]} root:users \$destseed.asc
+  ${Watchgate[sudo]} ${Watchgate[chown]} root:wheel \$destseed.asc
   ${Watchgate[sudo]} ${Watchgate[chmod]} 0400 \$destseed
   ${Watchgate[sudo]} ${Watchgate[chown]} root:root \$destseed
   ${Watchgate[sudo]} ${Watchgate[ln]} -fs \$destseed \
