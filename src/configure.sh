@@ -4,7 +4,7 @@ watchgate.substitution()
 {
   local cmd i cmdlist='sed basename cat id cut bash man mktemp egrep
   date env mv chpass pwgen hostname sudo cp chmod ln chown rm
-  sha512 signify shred mkdir tty head cut tr'
+  sha512 gpg shred mkdir tty head cut tr'
   for cmd in $cmdlist;do
     i="$(which $cmd)"
     if [[ -z $i ]];then
