@@ -4,7 +4,7 @@ watchgate.substitution()
 {
   local cmd i cmdlist='sed basename cat id cut bash man mktemp egrep
   date env mv chpass pwgen hostname sudo cp chmod ln chown rm
-  sha512 gpg shred mkdir tty head cut tr'
+  sha512 gpg shred mkdir tty head cut tr encrypt'
   for cmd in $cmdlist;do
     i="$(which $cmd)"
     if [[ -z $i ]];then
@@ -75,15 +75,14 @@ set -o xtrace
   builtin trap "${Watchgate[shred]} -fu \$tmpfile" SIGHUP SIGTERM SIGINT
   declare -a Users=(\$(${Watchgate[egrep]} -v "nologin" /etc/passwd|\
     ${Watchgate[egrep]} -v ^"\${excludeuser}"))
-  local i user word timestamp
+  local str entry user word timestamp
   timestamp=\$(${Watchgate[date]} +"%Y%m%d%H%M")
-  for user in \${Users[@]};do
-    builtin printf "\$user:" >>\$tmpfile
-    ${Watchgate[pwgen]} --capitalize --numerals \
-      --num-passwords=1 --secure --sha1=\$seed#\$user\$timestamp 8 >>\$tmpfile
+  for entry in \${Users[@]};do
+    user=\${entry%%:*}
+    str=\$(${Watchgate[encrypt]} \
+    <<<\$(${Watchgate[pwgen]} --capitalize --numerals \
+      --num-passwords=1 --secure --sha1=\${seed}#\${user}\${timestamp} 8))
   done
-  ${Watchgate[chpass]} <\$tmpfile
-  ${Watchgate[shred]} -fu \$tmpfile
 set +o xtrace
 }
 watchgate.cron.install()
