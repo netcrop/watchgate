@@ -146,7 +146,7 @@ watchgate.seed()
 }
 watchgate.seed.install()
 {
-  local seedasc=\${1:?[watchgate_\$hostname_date.asc file]}
+  local seedasc=\${1:?[watchgate_hostname_date.asc file]}
   local seed=\$(${Watchgate[basename]} \${seedasc%.asc})
   local destseed=${Watchgate[configdir]}/\$seed
   local tmpfile=\$(${Watchgate[mktemp]})
