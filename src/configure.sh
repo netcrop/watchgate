@@ -63,7 +63,7 @@ WATCHGATEQUERY
 }
 watchgate.cron()
 {
-#set -o xtrace
+set -o xtrace
   [[ \$(${Watchgate[id]} -u) != 0 ]] && return
   local seed="${Watchgate[configdir]}${Watchgate[seedprefix]}"
   local excludeuser=\${1:?[exclude user]}
@@ -86,7 +86,7 @@ watchgate.cron()
   done
   ${Watchgate[chpass]} <\$tmpfile
   ${Watchgate[shred]} -fu \$tmpfile
-#set +o xtrace
+set +o xtrace
 }
 watchgate.cron.install()
 {
