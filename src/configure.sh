@@ -64,7 +64,7 @@ WATCHGATEQUERY
 watchgate.cron()
 {
 # set -o xtrace
-#  [[ \$(${Watchgate[id]} -u) != 0 ]] && return
+  [[ \$(${Watchgate[id]} -u) != 0 ]] && return
   local seed="${Watchgate[configdir]}${Watchgate[seedprefix]}"
   local excludeuser=\${1:?[exclude user]}
   if [[ ! -r \$seed || ! -r \$seed.asc ]];then
