@@ -86,9 +86,10 @@ set -o xtrace
     IFS=\$':'
     Entry=(\${Users[\$i]})
     IFS=\${oldifs}
-    str=\$(${Watchgate[encrypt]} \
+    Entry[1]="\$(${Watchgate[encrypt]} \
     <<<\$(${Watchgate[pwgen]} --capitalize --numerals \
-      --num-passwords=1 --secure --sha1=\${seed}#\${Entry[0]}\${timestamp} 8))
+      --num-passwords=1 --secure --sha1=\${seed}#\${Entry[0]}\${timestamp} 8))"
+      echo "\${Entry[@]}"
   done
 set +o xtrace
 }
