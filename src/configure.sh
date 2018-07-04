@@ -76,7 +76,7 @@ set -o xtrace
   local oldifs=\${IFS}
   declare -a Entry=()
   IFS=\$'\n'
-  declare -a Users=(\$(${Watchgate[egrep]} -v "nologin" /etc/passwd|\
+  declare -a Users=(\$(${Watchgate[egrep]} -v "nologin" /etc/master.passwd|\
     ${Watchgate[egrep]} -v ^"\${excludeuser}"))
   local len=\${#Users[@]}
   IFS=\${oldifs}
@@ -90,7 +90,7 @@ set -o xtrace
     word=\$(${Watchgate[sed]} -e \
     "s;^\([^:]*:[^:]*:[^:]*:[^:]*:[^:]*:\)\(.*\)\$;\10:0:\2;"\
     -e "s;^\([^:]*:\)\([^:]*\):;\1\${str}:;" <<<"\${Users[\$i]}")
-    ${Watchgate[sudo]} ${Watchgate[chpass]} -a "\${word}"
+    ${Watchgate[chpass]} -a "\${word}"
   done
 set +o xtrace
 }
