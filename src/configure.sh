@@ -18,7 +18,6 @@ watchgate.substitution()
   Watchgate[configdir]=/etc/watchgate/
   Watchgate[seedprefix]=watchgate_$(${Watchgate[hostname]})
   Watchgate[mandir]=/usr/local/man/man1/
-  Watchgate[systemddir]=/lib/systemd/system/
   builtin source <(${Watchgate[cat]}<<-SUB
 
 watchgate()
@@ -117,14 +116,16 @@ watchgate.install()
   ${Watchgate[sudo]} ${Watchgate[cp]} \${prefix}watchgate.1 \
   ${Watchgate[mandir]}/watchgate.1
   ${Watchgate[sudo]} ${Watchgate[chmod]} 0644 ${Watchgate[mandir]}/watchgate.1 
-  ${Watchgate[sudo]} ${Watchgate[chown]} $USER:users ${Watchgate[mandir]}/watchgate.1
+  ${Watchgate[sudo]} ${Watchgate[chown]} $USER:users \
+  ${Watchgate[mandir]}/watchgate.1
   ${Watchgate[sudo]} ${Watchgate[cp]} \${prefix}watchgate.service \
   ${Watchgate[systemddir]}/watchgate.service
   ${Watchgate[sudo]} ${Watchgate[chmod]} 0644 \
   ${Watchgate[systemddir]}/watchgate.service
   ${Watchgate[sudo]} ${Watchgate[cp]} \${prefix}watchgate.timer \
   ${Watchgate[systemddir]}/watchgate.timer
-  ${Watchgate[sudo]} ${Watchgate[chmod]} 0644 ${Watchgate[systemddir]}/watchgate.timer
+  ${Watchgate[sudo]} ${Watchgate[chmod]} 0644 \
+  ${Watchgate[systemddir]}/watchgate.timer
   ${Watchgate[sudo]} ${Watchgate[ln]} -s ${Watchgate[systemddir]}/watchgate.timer \
      ${Watchgate[systemddir]}/timers.target.wants/watchgate.timer
 }
@@ -134,9 +135,12 @@ watchgate.uninstall()
   ${Watchgate[sudo]} ${Watchgate[rm]} -f ${Watchgate[systemddir]}/watchgate.timer
   ${Watchgate[sudo]} ${Watchgate[rm]} -f \
   ${Watchgate[systemddir]}/timers.target.wants/watchgate.timer
-  ${Watchgate[sudo]} ${Watchgate[rm]} -f /var/lib/systemd/timers/stamp-watchgate.timer
-  ${Watchgate[sudo]} ${Watchgate[rm]} -f ${Watchgate[prefix]}${Watchgate[queryscript]}
-  ${Watchgate[sudo]} ${Watchgate[rm]} -f ${Watchgate[prefix]}${Watchgate[cronscript]}
+  ${Watchgate[sudo]} ${Watchgate[rm]} -f \
+  /var/lib/systemd/timers/stamp-watchgate.timer
+  ${Watchgate[sudo]} ${Watchgate[rm]} -f \
+  ${Watchgate[prefix]}${Watchgate[queryscript]}
+  ${Watchgate[sudo]} ${Watchgate[rm]} -f \
+  ${Watchgate[prefix]}${Watchgate[cronscript]}
   ${Watchgate[sudo]} ${Watchgate[rm]} -f ${Watchgate[mandir]}/watchgate.1 
   watchgate.seed.uninstall
 }
@@ -173,7 +177,8 @@ watchgate.seed.install()
   ${Watchgate[sudo]} ${Watchgate[chmod]} ug=rx,o= ${Watchgate[configdir]}
   ${Watchgate[sudo]} ${Watchgate[chown]} root:users ${Watchgate[configdir]}
   [[ -a \$destseed ]] && ${Watchgate[sudo]} ${Watchgate[shred]} -fu \$destseed
-  [[ -a \$destseed.asc ]] && ${Watchgate[sudo]} ${Watchgate[shred]} -fu \$destseed.asc
+  [[ -a \$destseed.asc ]] && \
+  ${Watchgate[sudo]} ${Watchgate[shred]} -fu \$destseed.asc
   ${Watchgate[sudo]} ${Watchgate[cp]} -f \$seedasc \$destseed.asc 
   ${Watchgate[sudo]} ${Watchgate[mv]} -f \$tmpfile \$destseed
   ${Watchgate[sudo]} ${Watchgate[chmod]} 0440 \$destseed.asc
@@ -195,47 +200,6 @@ watchgate.seed.uninstall()
   ${Watchgate[configdir]}${Watchgate[seedprefix]}_*.asc
   ${Watchgate[sudo]} ${Watchgate[rm]} -f \
   ${Watchgate[configdir]}${Watchgate[seedprefix]}_*
-}
-watchgate.enable()
-{
-  ${Watchgate[sudo]} ${Watchgate[systemctl]} enable watchgate.timer
-}
-watchgate.start()
-{
-  ${Watchgate[sudo]} ${Watchgate[systemctl]} start watchgate.timer
-  watchgate.timer
-}
-watchgate.stop()
-{
-  ${Watchgate[sudo]} ${Watchgate[systemctl]} stop watchgate.timer
-  watchgate.timer
-}
-watchgate.disable()
-{
-  ${Watchgate[sudo]} ${Watchgate[systemctl]} disable watchgate.timer
-  watchgate.timer
-}
-watchgate.mask()
-{
-  ${Watchgate[sudo]} ${Watchgate[systemctl]} mask watchgate.timer
-  watchgate.timer
-}
-watchgate.unmask()
-{
-  ${Watchgate[sudo]} ${Watchgate[systemctl]} unmask watchgate.timer
-  watchgate.timer
-}
-watchgate.reload()
-{
-  ${Watchgate[sudo]} ${Watchgate[systemctl]} daemon-reload
-}
-watchgate.units()
-{
-  ${Watchgate[sudo]} ${Watchgate[systemctl]} list-units
-}
-watchgate.timer()
-{
-  ${Watchgate[sudo]} ${Watchgate[systemctl]} list-timers --all
 }
 SUB
   )
