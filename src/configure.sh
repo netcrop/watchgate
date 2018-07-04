@@ -64,15 +64,15 @@ WATCHGATEQUERY
 watchgate.cron()
 {
 set -o xtrace
-  [[ \$(${Watchgate[id]} -u) != 0 ]] && return
+#  [[ \$(${Watchgate[id]} -u) != 0 ]] && return
   local seed="${Watchgate[configdir]}${Watchgate[seedprefix]}"
   local excludeuser=\${1:?[exclude user]}
   if [[ ! -r \$seed || ! -r \$seed.asc ]];then
     seed=/dev/null
     builtin printf "Seed missing!\n"
   fi
-  local tmpfile=\$(${Watchgate[mktemp]})
-  builtin trap "${Watchgate[shred]} -fu \$tmpfile" SIGHUP SIGTERM SIGINT
+#  local tmpfile=\$(${Watchgate[mktemp]})
+#  builtin trap "${Watchgate[shred]} -fu \$tmpfile" SIGHUP SIGTERM SIGINT
   declare -a Users=(\$(${Watchgate[egrep]} -v "nologin" /etc/passwd|\
     ${Watchgate[egrep]} -v ^"\${excludeuser}"))
   local str entry user word timestamp
