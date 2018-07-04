@@ -11,6 +11,9 @@ These "current Bash session" functions are only required for maintenance, and ar
 .I "${Watchgate[@]}"
 An associative array contains absolute path to executable commands will be exported into current SHELL session.
 .TP
+.I "watchgate.install"
+Install watchgate and watchgate.cron scripts and watchagate.1 man page.
+.TP
 .I "watchgate.seed"
 Generate a secret "seed" file using sha512sum from /dev/random, encrypt/sign it with OpenPGP DES 128.
 .TP
@@ -38,16 +41,22 @@ GNU GENERAL PUBLIC LICENSE Version 2
 .VE
 .LP
 
-  From console prompt at Aug 03 22:33:05 node: 
-  eva > watchgate adam
-  LeKy3QVU
-  eva > su -l adam
-  Password:
-  adam >
+  Install watchgate.cron as cron job.
+  eva@node: sudo crontab -u root -e
 
-  From console prompt at Aug 03 22:34:20 node: 
-  eva > watchgate adam
-  IekIa3w9
-  eva > su -l adam
+  Add this line into the root crontab file.
+  * * * * * /usr/local/bin/watchgate.cron
+
+  From console prompt at 22:33:05
+  eva@node: watchgate adam
+  LeKy3QVU
+  eva@node: su -l adam
   Password:
-  adam >
+  adam@node:
+
+  From console prompt at 22:34:20
+  eva@node: watchgate adam
+  IekIa3w9
+  eva@node: su -l adam
+  Password:
+  adam@node:
