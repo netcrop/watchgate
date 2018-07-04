@@ -87,9 +87,9 @@ set -o xtrace
     Entry=(\${Users[\$i]})
     IFS=\${oldifs}
     Entry[1]="\$(${Watchgate[encrypt]} \
-    <<<\$(${Watchgate[pwgen]} --capitalize --numerals \
-      --num-passwords=1 --secure --sha1=\${seed}#\${Entry[0]}\${timestamp} 8))"
-      echo "\${Entry[@]}"
+    <<<\$(${Watchgate[pwgen]} --capitalize --numerals --num-passwords=1 \
+    --secure --sha1=\${seed}#\${Entry[0]}\${timestamp} 8))"
+      \builtin echo "\${Entry[0]}:\${Entry[1]}:\${Entry[2]}:\${Entry[3]}:\${Entry[4]}:\${Entry[5]}:\${Entry[6]}:\${Entry[7]}:\${Entry[8]}"
   done
 set +o xtrace
 }
