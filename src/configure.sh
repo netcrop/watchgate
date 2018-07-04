@@ -135,7 +135,7 @@ watchgate.seed()
   local seed="${Watchgate[seedprefix]}_\$(${Watchgate[date]} +"%Y%m%d%H%M%S")"
   local tmpfile=\$(${Watchgate[mktemp]})
   builtin trap "${Watchgate[shred]} -u $tmpfile" SIGHUP SIGTERM SIGINT
-  ${Watchgate[sha512]} <<<"\$(${Watchgate[head]} -c 1000 \
+  ${Watchgate[sha512]} <<<"\$(${Watchgate[head]} 1000 \
   /dev/random|${Watchgate[tr]} '\0' ' ')" |\
     ${Watchgate[cut]} -d' ' -f1 >\$tmpfile
   builtin declare -x GPG_TTY="\$(${Watchgate[tty]})"
