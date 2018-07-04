@@ -11,17 +11,11 @@ These "current Bash session" functions are only required for maintenance, and ar
 .I "${Watchgate[@]}"
 An associative array contains absolute path to executable commands will be exported into current SHELL session.
 .TP
-.I "watchgate.install/uninstall"
-Install/Uninstall the systemd timer service (alt. Cron service), which include $prefix/watchgate.cron (a TOTP Bash script run by Cron service), $prefix/watchgate (password query script, run by login user), watchgate.timer (systemd timer), watchgate.service (systemd service) and watchgate.1 (the Man page).
-.TP
 .I "watchgate.seed"
 Generate a secret "seed" file using sha512sum from /dev/random, encrypt/sign it with OpenPGP DES 128.
 .TP
 .I "watchgate.seed.install/uninstall"
 Install/Uninstall both the secret seed and encrypted seed.asc into /etc/watchgate/. The secret seed will only be visible for root user (User=root in systemd timer service).
-.TP
-.I "watchgate.enable/start/stop/disable/reload/units"
-Manage systemd timer service.
 .SH SCRIPTS
 .TP
 .I "$prefix/watchgate.cron"
@@ -44,11 +38,6 @@ GNU GENERAL PUBLIC LICENSE Version 2
 .VE
 .LP
 
-  From journalctl log file
-  Aug 03 22:33:00 node systemd[1]: Starting watchgate.service...
-  Aug 03 22:33:00 node chpasswd[7311]: pam_unix(chpasswd:chauthtok): password changed for adam
-  Aug 03 22:33:00 node systemd[1]: Started watchgate.service.
-  
   From console prompt at Aug 03 22:33:05 node: 
   eva > watchgate adam
   LeKy3QVU
@@ -56,11 +45,6 @@ GNU GENERAL PUBLIC LICENSE Version 2
   Password:
   adam >
 
-  From journalctl log file
-  Aug 03 22:34:00 node systemd[1]: Starting watchgate.service...
-  Aug 03 22:34:00 node chpasswd[7421]: pam_unix(chpasswd:chauthtok): password changed for adam
-  Aug 03 22:34:00 node systemd[1]: Started watchgate.service.
-  
   From console prompt at Aug 03 22:34:20 node: 
   eva > watchgate adam
   IekIa3w9

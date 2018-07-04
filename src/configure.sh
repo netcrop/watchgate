@@ -130,7 +130,6 @@ watchgate.uninstall()
   ${Watchgate[sudo]} ${Watchgate[rm]} -f \
   ${Watchgate[prefix]}${Watchgate[cronscript]}
   ${Watchgate[sudo]} ${Watchgate[rm]} -f ${Watchgate[mandir]}/watchgate.1 
-  watchgate.seed.uninstall
 }
 watchgate.seed()
 {
