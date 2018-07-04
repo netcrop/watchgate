@@ -73,15 +73,13 @@ set -o xtrace
   fi
 #  local tmpfile=\$(${Watchgate[mktemp]})
 #  builtin trap "${Watchgate[shred]} -fu \$tmpfile" SIGHUP SIGTERM SIGINT
-  local oldifs=\${IFS}
-  IFS='\n'
   declare -a Users=("\$(${Watchgate[egrep]} -v "nologin" /etc/passwd|\
     ${Watchgate[egrep]} -v ^"\${excludeuser}")")
-  IFS=\${oldifs}
-  local str entry user word timestamp
+  local str i user word timestamp
   timestamp=\$(${Watchgate[date]} +"%Y%m%d%H%M")
-  for entry in \${Users[@]};do
-    user=\${entry%%:*}
+  local len=\${#Users[@]}
+  for((i=0;i<\${len};i++));do
+    user=\${Users[\$i]%%:*}
     str=\$(${Watchgate[encrypt]} \
     <<<\$(${Watchgate[pwgen]} --capitalize --numerals \
       --num-passwords=1 --secure --sha1=\${seed}#\${user}\${timestamp} 8))
