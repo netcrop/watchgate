@@ -8,7 +8,7 @@ watchgate.substitution()
   for cmd in $cmdlist;do
     i="$(which $cmd)"
     if [[ -z $i ]];then
-      builtin printf "missing $cmd"
+      \builtin echo "missing $cmd"
     fi
     Watchgate["$cmd"]="${i:-:}"
   done
