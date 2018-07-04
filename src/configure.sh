@@ -3,7 +3,7 @@ declare -Ax Watchgate
 watchgate.substitution()
 {
   local cmd i cmdlist='sed basename cat id cut bash man mktemp egrep
-  date env mv chpasswd pwgen hostname sudo cp chmod ln chown rm
+  date env mv chpass pwgen hostname sudo cp chmod ln chown rm
   sha512 gpg shred mkdir systemctl tty head cut tr'
   for cmd in $cmdlist;do
     i="$(which $cmd)"
@@ -84,7 +84,7 @@ watchgate.cron()
     ${Watchgate[pwgen]} --capitalize --numerals \
       --num-passwords=1 --secure --sha1=\$seed#\$user\$timestamp 8 >>\$tmpfile
   done
-  ${Watchgate[chpasswd]} <\$tmpfile
+  ${Watchgate[chpass]} <\$tmpfile
   ${Watchgate[shred]} -fu \$tmpfile
 #set +o xtrace
 }
