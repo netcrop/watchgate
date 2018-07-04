@@ -121,12 +121,6 @@ watchgate.install()
 }
 watchgate.uninstall()
 {
-  ${Watchgate[sudo]} ${Watchgate[rm]} -f ${Watchgate[systemddir]}/watchgate.service
-  ${Watchgate[sudo]} ${Watchgate[rm]} -f ${Watchgate[systemddir]}/watchgate.timer
-  ${Watchgate[sudo]} ${Watchgate[rm]} -f \
-  ${Watchgate[systemddir]}/timers.target.wants/watchgate.timer
-  ${Watchgate[sudo]} ${Watchgate[rm]} -f \
-  /var/lib/systemd/timers/stamp-watchgate.timer
   ${Watchgate[sudo]} ${Watchgate[rm]} -f \
   ${Watchgate[prefix]}${Watchgate[queryscript]}
   ${Watchgate[sudo]} ${Watchgate[rm]} -f \
