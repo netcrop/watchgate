@@ -83,13 +83,10 @@ set -o xtrace
   local str i user timestamp
   timestamp=\$(${Watchgate[date]} +"%Y%m%d%H%M")
   for((i=0;i<\${len};i++));do
-    IFS=\$':'
-    Entry=(\${Users[\$i]})
-    IFS=\${oldifs}
-    Entry[1]="\$(${Watchgate[encrypt]} \
+    user="\${Users[\$i]%%:*}"
+    str="\$(${Watchgate[encrypt]} \
     <<<\$(${Watchgate[pwgen]} --capitalize --numerals --num-passwords=1 \
-    --secure --sha1=\${seed}#\${Entry[0]}\${timestamp} 8))"
-      \builtin echo "\${Entry[0]}:\${Entry[1]}:\${Entry[2]}:\${Entry[3]}:\${Entry[4]}:\${Entry[5]}:\${Entry[6]}:\${Entry[7]}:\${Entry[8]}"
+    --secure --sha1=\${seed}#\${user}\${timestamp} 8))"
   done
 set +o xtrace
 }
