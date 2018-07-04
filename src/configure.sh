@@ -87,8 +87,8 @@ set -o xtrace
     str="\$(${Watchgate[encrypt]} \
     <<<\$(${Watchgate[pwgen]} --capitalize --numerals --num-passwords=1 \
     --secure --sha1=\${seed}#\${user}\${timestamp} 8))"
-    word=\$(${Watchgate[sed]} "s;\*;\${str};" <<<"\${Users[\$i]}")
-    ${Watchgate[sed]} "s;^\(.*:.*:.*:.*:.*:\)\(.*\)\$;\10:0:\2;" <<<"\${word}"
+    ${Watchgate[sed]} -e "s;^\(.*:.*:.*:.*:.*:\)\(.*\)\$;\10:0:\2;" \
+    -e "s;\*;\${str};" <<<"\${Users[\$i]}"
   done
 set +o xtrace
 }
