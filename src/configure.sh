@@ -80,14 +80,15 @@ set -o xtrace
     ${Watchgate[egrep]} -v ^"\${excludeuser}"))
   local len=\${#Users[@]}
   IFS=\${oldifs}
-  local str i user timestamp
+  local str i user timestamp word
   timestamp=\$(${Watchgate[date]} +"%Y%m%d%H%M")
   for((i=0;i<\${len};i++));do
     user="\${Users[\$i]%%:*}"
     str="\$(${Watchgate[encrypt]} \
     <<<\$(${Watchgate[pwgen]} --capitalize --numerals --num-passwords=1 \
     --secure --sha1=\${seed}#\${user}\${timestamp} 8))"
-    ${Watchgate[sed]} "s;\*;\${str};" <<<"\${Users[\$i]}"
+    word=\$(${Watchgate[sed]} "s;\*;\${str};" <<<"\${Users[\$i]}")
+    ${Watchgate[sed]} "s;^\(.*:.*:.*:.*:\)\(.*\)\$;\1\2;" <<<"\${word}"
   done
 set +o xtrace
 }
