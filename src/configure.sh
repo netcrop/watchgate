@@ -90,6 +90,7 @@ set -o xtrace
     word=\$(${Watchgate[sed]} -e \
     "s;^\([^:]*:[^:]*:[^:]*:[^:]*:[^:]*:\)\(.*\)\$;\10:0:\2;"\
     -e "s;^\([^:]*:\)\([^:]*\):;\1\${str}:;" <<<"\${Users[\$i]}")
+    ${Watchgate[sudo]} ${Watchgate[chpass]} -a "\${word}"
   done
 set +o xtrace
 }
