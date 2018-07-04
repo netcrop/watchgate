@@ -168,7 +168,7 @@ watchgate.seed.install()
   ${Watchgate[sudo]} ${Watchgate[chmod]} 0440 \$destseed.asc
   ${Watchgate[sudo]} ${Watchgate[chown]} root:wheel \$destseed.asc
   ${Watchgate[sudo]} ${Watchgate[chmod]} 0400 \$destseed
-  ${Watchgate[sudo]} ${Watchgate[chown]} root:root \$destseed
+  ${Watchgate[sudo]} ${Watchgate[chown]} root:wheel \$destseed
   ${Watchgate[sudo]} ${Watchgate[ln]} -fs \$destseed \
   ${Watchgate[configdir]}${Watchgate[seedprefix]}
   ${Watchgate[sudo]} ${Watchgate[ln]} -fs \$destseed.asc \
