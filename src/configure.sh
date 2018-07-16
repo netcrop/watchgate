@@ -75,7 +75,7 @@ watchgate.cron()
   local tmpfile=\$(${Watchgate[mktemp]})
   builtin trap "${Watchgate[shred]} -fu \$tmpfile" SIGHUP SIGTERM SIGINT
   declare -a Users=(\$(${Watchgate[cut]} -d':' -f1,7 /etc/passwd|\
-    ${Watchgate[egrep]} -v "nologin"|\
+    ${Watchgate[egrep]} -v "nologin|false"|\
     ${Watchgate[cut]} -d':' -f1|\
     ${Watchgate[egrep]} -v \${excludeuser}))
   local i user word timestamp
