@@ -38,13 +38,13 @@ watchgate()
       return
     fi
     ${Watchgate[pwgen]} --capitalize --numerals --num-passwords=1 \
-      --secure --sha1=\$tmpfile#"\$user\$(${Watchgate[date]} +"%Y%m%d%H%M")" 8
+      --secure --sha1=\$tmpfile#"\$user\$(${Watchgate[date]} -u +"%Y%m%d%H%M")" 8
     ${Watchgate[shred]} -fu \$tmpfile
     return
   fi
   builtin printf "Seed missing!\n"
   ${Watchgate[pwgen]} --capitalize --numerals --num-passwords=1 \
-    --secure --sha1=/dev/null#"\$user\$(${Watchgate[date]} +"%Y%m%d%H%M")" 8
+    --secure --sha1=/dev/null#"\$user\$(${Watchgate[date]} -u +"%Y%m%d%H%M")" 8
 #  set +o xtrace
 }
 watchgate.query()
@@ -79,7 +79,7 @@ watchgate.cron()
     ${Watchgate[cut]} -d':' -f1|\
     ${Watchgate[egrep]} -v \${excludeuser}))
   local i user word timestamp
-  timestamp=\$(${Watchgate[date]} +"%Y%m%d%H%M")
+  timestamp=\$(${Watchgate[date]} -u +"%Y%m%d%H%M")
   for user in \${Users[@]};do
     builtin printf "\$user:" >>\$tmpfile
     ${Watchgate[pwgen]} --capitalize --numerals \
@@ -144,7 +144,7 @@ watchgate.seed()
 {
   local destdir=\${1:?[seed dest dir]}
   [[ -d \$destdir ]] || return
-  local seed="${Watchgate[seedprefix]}_\$(${Watchgate[date]} +"%Y%m%d%H%M%S")"
+  local seed="${Watchgate[seedprefix]}_\$(${Watchgate[date]} -u +"%Y%m%d%H%M%S")"
   local tmpfile=\$(${Watchgate[mktemp]})
   builtin trap "${Watchgate[shred]} -u $tmpfile" SIGHUP SIGTERM SIGINT
   ${Watchgate[sha512sum]} <<<"\$(${Watchgate[head]} -c 1000 \
