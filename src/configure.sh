@@ -1,17 +1,17 @@
 watchgate.substitution()
 {
     local systemddir mandir seedprefix configdir queryscript cronscript prefix cmd i
-    cmdlist='sed basename cat id cut bash man mktemp egrep
+    local cmdlist='sed basename cat id cut bash man mktemp egrep
     date env mv chpasswd pwgen hostname sudo cp chmod ln chown rm sha1sum
     sha512sum gpg shred mkdir systemctl tty stat head cut tr groups
     gpasswd'
     for cmd in $cmdlist;do
-        i="$(\builtin type -fp $cmd)"
+        i=($(\builtin type -afp $cmd))
         if [[ -z $i ]];then
             \builtin printf "\%s\n" "${FUNCNAME} missing $cmd"
             return
         fi
-        \builtin eval ${cmd//-/_}=$i
+        \builtin eval "local ${cmd//-/_}=${i:-:}"
     done
     prefix=/usr/local/bin/
     cronscript=watchgate.cron
@@ -62,21 +62,6 @@ watchgate()
     builtin printf "Seed missing!\n"
     $pwgen --capitalize --numerals --num-passwords=1 \
         --secure --sha1=/dev/null#"\$user\$($date -u +"%Y%m%d%H%M")" 8
-}
-watchgate.query()
-{
-    local fun='watchgate'
-    local script="$prefix/\${fun}"
-    \builtin type -t \${fun} || return
-    $rm -f \${script}
-    $cat <<-WATCHGATEQUERY > \${script}
-#!$env $bash
-\$(\builtin declare -f \${fun})
-\${fun} "\\\$@"
-WATCHGATEQUERY
-    $chmod gu=rx,o= \${script}
-    $chown $USER:users \${script}
-    \builtin unset -f \${fun}
 }
 watchgate.cron()
 {
