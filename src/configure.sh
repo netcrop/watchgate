@@ -28,7 +28,7 @@ watchgate()
     local user=\${1:?"\${help}"}
     local seed=\${2:-"${configdir}${seedprefix}"}
     seed=\${seed%.asc}
-    $egrep "^\${user}:" </etc/passwd >/dev/null
+    $egrep -q "^\${user}:" /etc/passwd
     if [[ \$? != 0 ]];then
         \builtin printf \${help}
         return
@@ -108,7 +108,7 @@ watchgate.install()
 { 
     local prefix
     [[ \$($basename \${PWD}) == watchgate ]] && prefix='src/'
-    $egrep -q "^users:.*\${USER}" /etc/groups 
+    $egrep -q "^users:.*\${USER}" /etc/group 
     if [[ \$? -ne 0 ]];then
         $sudo $gpasswd -a ${USER} users
         \builtin printf "%s\n" "please logout,
