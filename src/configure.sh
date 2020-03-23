@@ -76,8 +76,8 @@ watchgate.cron()
         builtin printf "Seed missing!\n"
     fi
     \builtin trap "[[ -r \$tmpfile ]] && $shred -fu \$tmpfile" SIGHUP SIGTERM SIGINT
-    declare -a Users=($egrep -v "\${loginuser}|nologin$|false$" /etc/passwd|\
-        $cut -d':' -f1)
+    declare -a Users=(\$($egrep -v "\${loginuser}|nologin\$|false\$" /etc/passwd |\
+    $cut -d':' -f1))
     timestamp=\$($date -u +"%Y%m%d%H%M")
     for user in \${Users[@]};do
         \builtin printf "\$user:" >>\$tmpfile
