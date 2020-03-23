@@ -110,7 +110,7 @@ watchgate.install()
 { 
     local prefix
     [[ \$($basename \${PWD}) == watchgate ]] && prefix='src/'
-    $groups|$egrep users >/dev/null
+    $egrep -qw "users" <<<"\$($groups)"
     if [[ \$? -ne 0 ]];then
         $sudo $gpasswd -a ${USER} users
         \builtin printf "%s\n" "please logout,
