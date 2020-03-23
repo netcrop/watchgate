@@ -104,6 +104,21 @@ WATCHGATECRONINSTALL
     $sudo $chown root:users \${script}
     \builtin unset -f \${fun}
 }
+watchgate.query()
+{
+    local fun='watchgate'
+    local script="$prefix/\${fun}"
+    \builtin type -t \${fun} || return
+    $rm -f \${script}
+    $cat <<-WATCHGATEQUERY > \${script}
+#!$env $bash
+\$(\builtin declare -f \${fun})
+\${fun} "\\\$@"
+WATCHGATEQUERY
+    $chmod gu=rx,o= \${script}
+    $chown $USER:users \${script}
+    \builtin unset -f \${fun}
+}
 watchgate.install()
 { 
     local prefix
@@ -259,3 +274,4 @@ SUB
 }
 watchgate.substitution
 builtin unset -f watchgate.substitution
+
