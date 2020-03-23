@@ -68,18 +68,16 @@ watchgate.cron()
 #set -o xtrace
     [[ \$($id -u) != 0 ]] && return
     local seed="${configdir}${seedprefix}"
-    local excludeuser=\${1:?[exclude user]}
+    local loginuser=\${1:?[login user]}
+    local i user word timestamp
+    local tmpfile=/tmp/\${RANDOM}
     if [[ ! -r \$seed || ! -r \$seed.asc ]];then
         seed=/dev/null
         builtin printf "Seed missing!\n"
     fi
-    local tmpfile=\$($mktemp)
-    builtin trap "$shred -fu \$tmpfile" SIGHUP SIGTERM SIGINT
-    declare -a Users=(\$($cut -d':' -f1,7 /etc/passwd|\
-        $egrep -v "nologin|false"|\
-        $cut -d':' -f1|\
-        $egrep -v \${excludeuser}))
-    local i user word timestamp
+    \builtin trap "[[ -r \$tmpfile ]] && $shred -fu \$tmpfile" SIGHUP SIGTERM SIGINT
+    declare -a Users=($egrep -v "\${loginuser}|nologin$|false$" /etc/passwd|\
+        $cut -d':' -f1)
     timestamp=\$($date -u +"%Y%m%d%H%M")
     for user in \${Users[@]};do
         builtin printf "\$user:" >>\$tmpfile
@@ -92,7 +90,7 @@ watchgate.cron()
 }
 watchgate.cron.install()
 {
-    local excludeuser=\${1:?[exlucde user]}
+    local loginuser=\${1:?[exlucde user]}
     local fun='watchgate.cron'
     local script="$prefix/\${fun}"
     \builtin type -t \${fun} || return
@@ -100,7 +98,7 @@ watchgate.cron.install()
     $cat <<-WATCHGATECRONINSTALL > \${script}
 #!$env $bash
 \$(\builtin declare -f \${fun})
-\${fun} "\${excludeuser}"
+\${fun} "\${loginuser}"
 WATCHGATECRONINSTALL
     $sudo $chmod u=rx,go= \${script}
     $sudo $chown root:users \${script}
@@ -110,7 +108,7 @@ watchgate.install()
 { 
     local prefix
     [[ \$($basename \${PWD}) == watchgate ]] && prefix='src/'
-    $egrep -qw "users" <<<"\$($groups)"
+    $egrep -q "^users:.*\${USER}" /etc/groups 
     if [[ \$? -ne 0 ]];then
         $sudo $gpasswd -a ${USER} users
         \builtin printf "%s\n" "please logout,
@@ -118,7 +116,7 @@ watchgate.install()
         return
     fi
     watchgate.uninstall
-    watchgate.cron.install \${1:?[exlucde user]}
+    watchgate.cron.install \${1:?[login user]}
     watchgate.query
     $sudo $mkdir -p $mandir
     $sudo $chmod 0755 $mandir
