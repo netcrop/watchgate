@@ -80,7 +80,7 @@ watchgate.cron()
         $cut -d':' -f1)
     timestamp=\$($date -u +"%Y%m%d%H%M")
     for user in \${Users[@]};do
-        builtin printf "\$user:" >>\$tmpfile
+        \builtin printf "\$user:" >>\$tmpfile
         $pwgen --capitalize --numerals \
             --num-passwords=1 --secure --sha1=\$seed#\$user\$timestamp 8 >>\$tmpfile
     done
@@ -90,7 +90,7 @@ watchgate.cron()
 }
 watchgate.cron.install()
 {
-    local loginuser=\${1:?[exlucde user]}
+    local loginuser=\${1:?[login user]}
     local fun='watchgate.cron'
     local script="$prefix/\${fun}"
     \builtin type -t \${fun} || return
