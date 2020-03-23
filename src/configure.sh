@@ -4,7 +4,7 @@ watchgate.substitution()
     local cmdlist='sed basename cat id cut bash man mktemp egrep
     date env mv chpasswd pwgen hostname sudo cp chmod ln chown rm sha1sum
     sha512sum gpg shred mkdir systemctl tty stat head cut tr groups
-    gpasswd'
+    gpasswd socat'
     for cmd in $cmdlist;do
         i=($(\builtin type -afp $cmd))
         if [[ -z $i ]];then
@@ -22,6 +22,21 @@ watchgate.substitution()
     systemddir=/usr/lib/systemd/system/
     builtin source <($cat<<-SUB
 
+watchgate.server()
+{
+    local seed="${configdir}${seedprefix}"
+    local user=\${1:?[user]}
+    [[ \$($id -u) != 0 ]] && return
+    $egrep -q "^\${user}:" /etc/passwd || return
+    if [[ -a \$seed ]];then
+        $pwgen --capitalize --numerals --num-passwords=1 \
+            --secure --sha1=\$seed#"\$user\$($date -u +"%Y%m%d%H%M")" 8
+        return
+    fi
+    builtin printf "Seed missing!\n"
+    $pwgen --capitalize --numerals --num-passwords=1 \
+        --secure --sha1=/dev/null#"\$user\$($date -u +"%Y%m%d%H%M")" 8
+}
 watchgate()
 {
     local help="\${FUNCNAME}:[user][optional: stored seed asc file]"
@@ -274,4 +289,3 @@ SUB
 }
 watchgate.substitution
 builtin unset -f watchgate.substitution
-
