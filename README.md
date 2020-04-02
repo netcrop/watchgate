@@ -15,11 +15,11 @@ OpenPGP version 2+
 ```
 * Checkout distro specific Releases
 eva@node: git branch -avv
-* arch
-  debian
+  arch
+* debian
   master
-eva@node: git checkout debian
-Switched to branch debian
+eva@node: git checkout arch
+Switched to branch arch
 
 # Following Bash functions use sudo
 eva@node: cd watchgate/
