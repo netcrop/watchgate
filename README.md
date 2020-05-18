@@ -23,7 +23,7 @@ Switched to branch arch
 
 # Following Bash functions use sudo
 eva@node: cd watchgate/
-eva@node: source src/configure.sh
+eva@node: source watchgate.sh
 
 # Install/Uninstall the systemd timer service (alt. Cron service),
 # which include $prefix/watchgate.cron (a TOTP Bash script run by Cron service),

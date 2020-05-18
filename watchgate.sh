@@ -2,13 +2,13 @@ watchgate.substitution()
 {
     local systemddir mandir seedprefix configdir queryscript cronscript prefix cmd i
     local cmdlist='sed basename cat id cut bash man mktemp egrep
-    date env mv chpasswd pwgen hostname sudo cp chmod ln chown rm sha1sum
+    date env mv chpasswd pwgen sudo cp chmod ln chown rm sha1sum
     sha512sum gpg shred mkdir systemctl tty stat head cut tr groups
     gpasswd socat'
     for cmd in $cmdlist;do
         i=($(\builtin type -afp $cmd))
         if [[ -z $i ]];then
-            \builtin printf "\%s\n" "${FUNCNAME} missing $cmd"
+            \builtin printf "%s\n" "${FUNCNAME} missing $cmd"
             return
         fi
         \builtin eval "local ${cmd//-/_}=${i:-:}"
@@ -17,7 +17,7 @@ watchgate.substitution()
     cronscript=watchgate.cron
     queryscript=watchgate
     configdir=/etc/watchgate/
-    seedprefix=watchgate_$($hostname)
+    seedprefix=watchgate_${HOSTNAME}
     mandir=/usr/local/man/man1/
     systemddir=/usr/lib/systemd/system/
     builtin source <($cat<<-SUB
