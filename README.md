@@ -2,7 +2,7 @@
 Time based One Time Password - TOTP written as Bash/SHELL Cron service.  
 
   It can be used to auto generate TOTP within one minute interval for local, remote Computers, Virtual Machines and Dockers.
-Administrator with one user account can remote login to all other nodes and user accounts for maintenance purpose.
+Administrator with one user account can remote login to all other nodes and user accounts for maintenance purpose. A Network Time Service is a prequest for watchgate service.
 ## Install, maintain and uninstall
 
 * For linux/unix system:

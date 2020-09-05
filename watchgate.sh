@@ -5,7 +5,7 @@ watchgate.substitute()
     cmdlist='sed basename cat id cut bash man mktemp egrep
     date env mv chpasswd pwgen sudo cp chmod ln chown rm sha1sum
     sha512sum gpg shred mkdir systemctl tty stat head cut tr groups
-    gpasswd perl'
+    gpasswd'
     declare -A Devlist=(
     )
     cmdlist="${Devlist[@]} $cmdlist"
