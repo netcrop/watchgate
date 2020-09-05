@@ -1,7 +1,7 @@
 watchgate.substitute()
 {
-    local reslist devlist libdir includedir bindir cmd i perl_version \
-    vendor_perl systemddir mandir seedprefix configdir queryscript cronscript prefix \
+    local reslist devlist libdir includedir bindir cmd i signal \
+    systemddir mandir seedprefix configdir queryscript cronscript prefix \
     cmdlist='sed basename cat id cut bash man mktemp egrep
     date env mv chpasswd pwgen sudo cp chmod ln chown rm sha1sum
     sha512sum gpg shred mkdir systemctl tty stat head cut tr groups
@@ -22,8 +22,6 @@ watchgate.substitute()
     }
     [[ -n $devlist ]] && \builtin printf "%s\n" "$FUNCNAME Optional: $devlist"
 
-    perl_version="$($perl -e 'print $^V')"
-    vendor_perl=/usr/share/perl5/vendor_perl/
     libdir=/usr/local/lib
     includedir=/usr/local/include/
     bindir=/usr/local/bin/
@@ -34,6 +32,7 @@ watchgate.substitute()
     seedprefix=watchgate_${HOSTNAME}
     mandir=/usr/local/man/man1/
     systemddir=/usr/lib/systemd/system/
+    signal='HUP TERM INT RETURN'
     builtin source <($cat<<-SUB
 
 watchgate.server()
@@ -63,7 +62,7 @@ watchgate()
         return
     fi
     if [[ -r \${2} || -a \$seed && -r \$seed.asc ]];then
-    #    \builtin set -o xtrace
+    #    \builtin set -x
         \builtin declare -x GPG_TTY="\$($tty)"
         local owner=\$($stat -c %U \$GPG_TTY)
         if [[ "\${owner}" != "\${USER}" ]];then
@@ -71,14 +70,14 @@ watchgate()
             return
         fi
         \builtin \shopt -s extdebug
-        \builtin trap "watchgate.delocate" SIGHUP SIGTERM SIGINT RETURN
+        \builtin trap "watchgate.delocate" $signal
         watchgate.delocate()
         {
             [[ -r \${tmpfile} ]] && $shred -fu \$tmpfile
-            \builtin trap - SIGHUP SIGTERM SIGINT RETURN
+            \builtin trap - $signal
             \builtin shopt -u extdebug
             \builtin unset -f watchgate.delocate
-            \builtin set +o xtrace
+            \builtin set +x
         }
         local tmpfile=\$($mktemp)
         $gpg --homedir \$HOME/.gnupg --no-tty \
@@ -94,7 +93,7 @@ watchgate()
 }
 watchgate.cron()
 {
-#set -o xtrace
+#set -x
     [[ \$($id -u) != 0 ]] && return
     local seed="${configdir}${seedprefix}"
     local loginuser=\${1:?[login user]}
@@ -115,7 +114,7 @@ watchgate.cron()
     done
     $chpasswd <\$tmpfile
     $shred -fu \$tmpfile
-#set +o xtrace
+#set +x
 }
 watchgate.cron.install()
 {
@@ -219,18 +218,18 @@ watchgate.seed.install()
     local seed=\$($basename \${seedasc%.asc})
     local destseed=$configdir/\$seed
     local owner=\$($stat -c %U \$GPG_TTY)
-#    \builtin set -o xtrace
+#    \builtin set -x
     \builtin \shopt -s extdebug
     \builtin declare -x GPG_TTY="\$($tty)"
-    \builtin trap "watchgate.delocate" SIGHUP SIGTERM SIGINT RETURN
+    \builtin trap "watchgate.delocate" $signal
     watchgate.delocate()
     {
         [[ -r \${tmpfile} ]] && $shred -fu \$tmpfile
         [[ "\${owner}" == "\${USER}" ]] || $sudo $chown \${owner}: \$GPG_TTY
-        \builtin trap - SIGHUP SIGTERM SIGINT RETURN
+        \builtin trap - signal
         \builtin shopt -u extdebug
         \builtin unset -f watchgate.delocate
-        \builtin set +o xtrace
+        \builtin set +x
     }
     local tmpfile=\$($mktemp)
     $sudo $chown \$USER: \$GPG_TTY
