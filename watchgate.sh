@@ -1,18 +1,32 @@
-watchgate.substitution()
+watchgate.substitute()
 {
-    local systemddir mandir seedprefix configdir queryscript cronscript prefix cmd i
-    local cmdlist='sed basename cat id cut bash man mktemp egrep
+    local reslist devlist libdir includedir bindir cmd i perl_version \
+    vendor_perl systemddir mandir seedprefix configdir queryscript cronscript prefix \
+    cmdlist='sed basename cat id cut bash man mktemp egrep
     date env mv chpasswd pwgen sudo cp chmod ln chown rm sha1sum
     sha512sum gpg shred mkdir systemctl tty stat head cut tr groups
-    gpasswd socat'
+    gpasswd perl'
+    declare -A Devlist=(
+    )
+    cmdlist="${Devlist[@]} $cmdlist"
     for cmd in $cmdlist;do
         i=($(\builtin type -afp $cmd))
-        if [[ -z $i ]];then
-            \builtin printf "%s\n" "${FUNCNAME} missing $cmd"
-            return
-        fi
+        [[ -z $i ]] && {
+            [[ -z ${Devlist[$cmd]} ]] && reslist+=" $cmd" || devlist+=" $cmd"
+        }
         \builtin eval "local ${cmd//-/_}=${i:-:}"
     done
+    [[ -n $reslist ]] && {
+        \builtin printf "%s\n" "$FUNCNAME Require: $reslist"
+        return
+    }
+    [[ -n $devlist ]] && \builtin printf "%s\n" "$FUNCNAME Optional: $devlist"
+
+    perl_version="$($perl -e 'print $^V')"
+    vendor_perl=/usr/share/perl5/vendor_perl/
+    libdir=/usr/local/lib
+    includedir=/usr/local/include/
+    bindir=/usr/local/bin/
     prefix=/usr/local/bin/
     cronscript=watchgate.cron
     queryscript=watchgate
@@ -285,7 +299,7 @@ watchgate.timer()
     $sudo $systemctl list-timers --all
 }
 SUB
-    )
+)
 }
-watchgate.substitution
-builtin unset -f watchgate.substitution
+watchgate.substitute
+builtin unset -f watchgate.substitute
